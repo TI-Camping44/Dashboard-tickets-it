@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal IT | TICKETS INTERNOS</title>
+    <title>Dashboard IT | TICKET INTERNO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Tickets IT</h1>
-                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard Analítico IT • Camping 44</p>
+                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard IT • Camping 44</p>
                 </div>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
@@ -50,7 +50,7 @@
                     Actualizar
                 </button>
                 <div id="status" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm">
-                    Conectado
+                    Conectado en vivo
                 </div>
             </div>
         </div>
@@ -127,6 +127,56 @@
                             <option value="Media">🟡 Media</option>
                             <option value="Baja">🟢 Baja</option>
                         </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow">
+                <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    Estatus de Planillas / Informes Automatizados
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">Área Comercial</h4>
+                            <p class="text-sm font-bold text-slate-800 mt-0.5">Informe de Ventas</p>
+                        </div>
+                        <div class="mt-3 flex items-center justify-between">
+                            <span class="text-xs text-slate-500 font-medium">Sincronización Odoo</span>
+                            <span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Automatizado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">Área Operativa</h4>
+                            <p class="text-sm font-bold text-slate-800 mt-0.5">Informe de Gestión Regulatoria</p>
+                        </div>
+                        <div class="mt-3 flex items-center justify-between">
+                            <span class="text-xs text-slate-500 font-medium">Procesos Legales</span>
+                            <span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Automatizado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">Área Marketing / Ventas</h4>
+                            <p class="text-sm font-bold text-slate-800 mt-0.5">Catálogo y Lista de Precios</p>
+                        </div>
+                        <div class="mt-3 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-slate-500 font-medium">Estructura Base</span>
+                                <span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Automatizado
+                                </span>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 text-[11px] text-amber-900 p-2 rounded-lg font-medium">
+                                <span class="font-bold">⚠️ Pendiente Marketing:</span> Carga de fotos de productos dentro de Odoo para estirar de forma automática.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -293,7 +343,6 @@
             const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
             fillSelect('filter-category', cats, '📂 Todas');
 
-            // Poblar filtro de Estados (Si no existe la columna en el Sheets, por defecto pondrá Pendiente/Finalizado)
             const stats = [...new Set(data.map(r => r['Estado'] || r['Status'] || 'Pendiente'))].filter(Boolean).sort();
             fillSelect('filter-status', stats, '📌 Todos');
         }
@@ -385,7 +434,6 @@
             document.getElementById('kpi-total').innerText = data.length;
             document.getElementById('kpi-high').innerText = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
             
-            // Si en tu hoja no tienes columna "Estado", se asumirá que la mayoría están Pendientes/En Proceso para ilustrar
             const pend = data.filter(r => {
                 const st = (r['Estado'] || r['Status'] || 'Pendiente').toLowerCase();
                 return st.includes('pend') || st.includes('abierto') || st.includes('proceso') || st.includes('inici');
@@ -472,7 +520,6 @@
                 if (row['Prioridad'] === 'Alta') pBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-200">Alta</span>';
                 if (row['Prioridad'] === 'Media') pBadge = '<span class="bg-sky-100 text-sky-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-200">Media</span>';
 
-                // Lógica visual del ESTADO
                 const stText = row['Estado'] || row['Status'] || 'Pendiente';
                 let stBadge = `<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>${stText}</span>`;
                 if(stText.toLowerCase().includes('fin') || stText.toLowerCase().includes('resuelt') || stText.toLowerCase().includes('cerrad')) {
