@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es"> 
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,6 @@
             background-color: #f8fafc;
             color: #1e293b;
         }
-        /* Scrollbar suave y estético */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -28,216 +27,200 @@
         .card-shadow-hover:hover {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
         }
-        .transition-all-fast {
-            transition: all 0.2s ease-in-out;
-        }
     </style>
 </head>
 <body class="min-h-screen pb-12">
 
-    <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-sm backdrop-blur-md bg-white/90">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm bg-white/95 backdrop-blur">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex items-center gap-4">
-                <div class="flex items-center justify-center bg-slate-50 border border-slate-200 p-2 rounded-xl h-14 w-auto min-w-[56px] shadow-sm">
+                <div class="flex items-center justify-center bg-slate-50 border border-slate-200 p-2 rounded-xl h-14 w-auto shadow-sm">
                     <img src="LOGOC44.png" alt="Logo Camping 44" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-bold text-indigo-600 text-lg\'>C44</span>';">
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Mesa de Ayuda & Tickets IT</h1>
-                        <span class="bg-indigo-50 text-indigo-700 border border-indigo-200/60 text-xs font-semibold px-2.5 py-0.5 rounded-full">v2.0</span>
-                    </div>
-                    <p class="text-slate-500 text-xs sm:text-sm mt-0.5 font-medium">Dashboard analítico en tiempo real • Camping 44</p>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Mesa de Ayuda & Tickets IT</h1>
+                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard Analítico e Informes de Infraestructura • Camping 44</p>
                 </div>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-                <button onclick="resetAllFilters()" id="btn-reset" class="hidden items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition duration-150 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                <button onclick="resetAllFilters()" id="btn-reset" class="hidden items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm">
                     Limpiar Filtros
                 </button>
-                <button onclick="fetchData()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-3.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold transition duration-150 shadow-sm hover:border-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
+                <button onclick="fetchData()" class="bg-white hover:bg-slate-50 text-slate-700 px-3.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold shadow-sm">
                     Actualizar
                 </button>
-                <div id="status" class="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div id="status" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm">
                     Conectado en vivo
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <section class="bg-white border border-slate-200/80 p-5 rounded-2xl mb-6 card-shadow">
-            <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
-                <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
-                    <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Filtros Multicriterio (Haz clic en los gráficos o selecciona aquí)</h2>
-                </div>
-                <div class="text-xs font-medium text-slate-500">
-                    Mostrando <span id="displayed-count" class="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">0</span> de <span id="total-count" class="font-bold text-slate-700">0</span> tickets
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                <div class="relative">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Buscar palabra clave</label>
-                    <div class="relative">
-                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Ej: impresora, correo..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl pl-8 pr-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400 absolute left-2.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 xl:grid-cols-4 gap-6">
+        
+        <div class="xl:col-span-3 space-y-6">
+            
+            <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow">
+                <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
+                    <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                        Filtros Multicriterio
+                    </h2>
+                    <div class="text-xs font-medium text-slate-500">
+                        Mostrando <span id="displayed-count" class="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">0</span> de <span id="total-count" class="font-bold text-slate-700">0</span> tickets
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Área / Sector</label>
-                    <select id="filter-area" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
-                        <option value="ALL">🏢 Todas las Áreas</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Categoría del Problema</label>
-                    <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
-                        <option value="ALL">📂 Todas las Categorías</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tipo de Solicitud</label>
-                    <select id="filter-type" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
-                        <option value="ALL">📌 Todos los Tipos</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Prioridad</label>
-                    <select id="filter-priority" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
-                        <option value="ALL">⚡ Todas las Prioridades</option>
-                        <option value="Crítica">🚨 Crítica</option>
-                        <option value="Alta">🔴 Alta</option>
-                        <option value="Media">🟡 Media</option>
-                        <option value="Baja">🟢 Baja</option>
-                    </select>
-                </div>
-            </div>
-        </section>
-
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div onclick="resetAllFilters()" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-indigo-500 hover:border-indigo-300">
-                <div class="flex justify-between items-start">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total en Vista</p>
-                        <h2 id="kpi-total" class="text-3xl font-extrabold text-slate-900 mt-1.5 group-hover:text-indigo-600 transition">0</h2>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Palabra clave</label>
+                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 transition">
                     </div>
-                    <div class="p-2.5 bg-indigo-50 rounded-xl text-indigo-600 group-hover:scale-110 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    </div>
-                </div>
-                <p class="text-xs text-slate-500 mt-3 flex items-center gap-1 font-medium">
-                    <span class="text-indigo-600">👆 Clic para ver todos</span>
-                </p>
-            </div>
-
-            <div onclick="filterByPriorityGroup('high')" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-rose-500 hover:border-rose-300">
-                <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Críticos o Altos</p>
-                        <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-600 mt-1.5 group-hover:text-rose-700 transition">0</h2>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Año</label>
+                        <select id="filter-year" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">📅 Todos</option>
+                        </select>
                     </div>
-                    <div class="p-2.5 bg-rose-50 rounded-xl text-rose-600 group-hover:scale-110 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                    </div>
-                </div>
-                <p class="text-xs text-rose-600/80 mt-3 flex items-center gap-1 font-semibold">
-                    <span>🔥 Clic para filtrar urgentes</span>
-                </p>
-            </div>
-
-            <div onclick="filterByTypeGroup('Incidente')" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-amber-500 hover:border-amber-300">
-                <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Incidentes</p>
-                        <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-600 mt-1.5 group-hover:text-amber-700 transition">0</h2>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Mes</label>
+                        <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">🗓️ Todos</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
                     </div>
-                    <div class="p-2.5 bg-amber-50 rounded-xl text-amber-600 group-hover:scale-110 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                    </div>
-                </div>
-                <p class="text-xs text-amber-700/80 mt-3 flex items-center gap-1 font-semibold">
-                    <span>⚠️ Clic para ver fallos</span>
-                </p>
-            </div>
-
-            <div onclick="filterByTypeGroup('Solicitud')" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-emerald-500 hover:border-emerald-300">
-                <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Solicitudes Nuevas</p>
-                        <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-600 mt-1.5 group-hover:text-emerald-700 transition">0</h2>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Área / Sector</label>
+                        <select id="filter-area" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">🏢 Todas</option>
+                        </select>
                     </div>
-                    <div class="p-2.5 bg-emerald-50 rounded-xl text-emerald-600 group-hover:scale-110 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Categoría</label>
+                        <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">📂 Todas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Prioridad</label>
+                        <select id="filter-priority" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">⚡ Todas</option>
+                            <option value="Crítica">🚨 Crítica</option>
+                            <option value="Alta">🔴 Alta</option>
+                            <option value="Media">🟡 Media</option>
+                            <option value="Baja">🟢 Baja</option>
+                        </select>
                     </div>
                 </div>
-                <p class="text-xs text-emerald-700/80 mt-3 flex items-center gap-1 font-semibold">
-                    <span>✨ Clic para ver pedidos</span>
-                </p>
-            </div>
-        </section>
+            </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div class="bg-white border border-slate-200/80 p-6 rounded-2xl card-shadow lg:col-span-1 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <h3 class="text-base font-bold text-slate-800">Tickets por Área / Sector</h3>
-                        <span class="text-[10px] bg-slate-100 text-slate-500 font-semibold px-2 py-0.5 rounded">Interactivo</span>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-4">Haz clic en una sección para filtrar esa área</p>
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div onclick="resetAllFilters()" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-indigo-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tickets en Vista</p>
+                    <h2 id="kpi-total" class="text-3xl font-extrabold text-slate-900 mt-1">0</h2>
                 </div>
-                <div class="h-64 relative flex items-center justify-center">
-                    <canvas id="areaChart"></canvas>
+                <div onclick="filterByPriorityQuick()" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-rose-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Críticos o Altos</p>
+                    <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-600 mt-1">0</h2>
                 </div>
-            </div>
+                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow border-l-4 border-l-amber-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Incidentes</p>
+                    <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-600 mt-1">0</h2>
+                </div>
+                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow border-l-4 border-l-emerald-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Solicitudes Nuevas</p>
+                    <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h2>
+                </div>
+            </section>
 
-            <div class="bg-white border border-slate-200/80 p-6 rounded-2xl card-shadow lg:col-span-2 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <h3 class="text-base font-bold text-slate-800">Categorías de Problemas</h3>
-                        <span class="text-[10px] bg-slate-100 text-slate-500 font-semibold px-2 py-0.5 rounded">Interactivo</span>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-4">Clasificación de incidentes • Haz clic en una barra para filtrar</p>
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow h-[340px] flex flex-col justify-between">
+                    <h3 class="text-sm font-bold text-slate-800">Tickets por Área / Sector</h3>
+                    <div class="h-60 relative flex items-center justify-center"><canvas id="areaChart"></canvas></div>
                 </div>
-                <div class="h-64 relative">
-                    <canvas id="categoryChart"></canvas>
+                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow lg:col-span-2 h-[340px] flex flex-col justify-between">
+                    <h3 class="text-sm font-bold text-slate-800">Categorías de Problemas</h3>
+                    <div class="h-60 relative"><canvas id="categoryChart"></canvas></div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="bg-white border border-slate-200/80 rounded-2xl card-shadow overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                <div>
-                    <h3 class="text-base font-bold text-slate-800">Historial de Tickets Registrados</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Listado ordenado desde el más reciente al más antiguo</p>
+            <section class="bg-white border border-slate-200 rounded-2xl card-shadow overflow-hidden">
+                <div class="p-4 bg-slate-50/50 border-b border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-800">Historial de Tickets Filtrados</h3>
                 </div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-600">
-                    <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] border-b border-slate-200 font-bold tracking-wider">
-                        <tr>
-                            <th class="p-4 whitespace-nowrap">Fecha / Hora</th>
-                            <th class="p-4">Usuario / Correo</th>
-                            <th class="p-4">Área / Sector</th>
-                            <th class="p-4">Categoría</th>
-                            <th class="p-4">Tipo</th>
-                            <th class="p-4 text-center">Prioridad</th>
-                            <th class="p-4 min-w-[300px]">Descripción del Problema o Solicitud</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tickets-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm font-normal"></tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">Fecha</th>
+                                <th class="p-3">Usuario</th>
+                                <th class="p-3">Área</th>
+                                <th class="p-3">Categoría</th>
+                                <th class="p-3 text-center">Prioridad</th>
+                                <th class="p-3 min-w-[250px]">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="xl:col-span-1 space-y-6">
+            <aside class="bg-amber-50 border border-amber-200 p-5 rounded-2xl card-shadow space-y-4">
+                <div class="flex items-start gap-3 pb-3 border-b border-amber-200">
+                    <div class="p-2 bg-amber-500 text-white rounded-xl animate-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-bold text-amber-900 uppercase tracking-wide">AVISO CRÍTICO DE INFRAESTRUCTURA</h2>
+                        <h3 class="text-sm font-extrabold text-amber-950 mt-0.5">Incidente HANSA ERP</h3>
+                    </div>
+                </div>
+
+                <div class="text-xs text-amber-900 space-y-3 font-medium leading-relaxed">
+                    <div class="bg-white/60 p-3 rounded-xl border border-amber-200/50">
+                        <p class="font-bold text-amber-950">🚨 Diagnóstico de Falla:</p>
+                        <p class="mt-1 text-slate-700 font-normal">Posterior a tormenta eléctrica y corto circuito, se produjo una falla física crítica en los 3 discos rígidos del servidor principal (RAID afectado), perdiendo el acceso al archivo original <code class="bg-amber-100 px-1 py-0.5 rounded text-rose-700 font-mono text-[11px]">Hansa.hdb</code>.</p>
+                    </div>
+
+                    <div class="bg-white/60 p-3 rounded-xl border border-amber-200/50">
+                        <p class="font-bold text-amber-950">📦 Diagnóstico de Copias de Seguridad:</p>
+                        <p class="mt-1 text-slate-700 font-normal">Los respaldos alojados en el <span class="font-semibold text-slate-900">LACIE-NAS</span> (Backups del 06/05/2026 de 29GB y 31GB) arrojan error de <span class="text-rose-600 font-bold">"INCOMPLETE BACKUP DETECTED"</span> al importarse. Se determinó que el script de compresión copiaba los archivos antes de finalizar su procesamiento.</p>
+                    </div>
+
+                    <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-xl space-y-2">
+                        <div class="flex items-center justify-between text-indigo-950 font-bold">
+                            <span>🧪 Laboratorio CBL (Recuperación)</span>
+                            <span class="bg-indigo-600 text-white font-mono px-1.5 py-0.5 rounded text-[10px]">OS: 48069</span>
+                        </div>
+                        <div class="text-[11px] text-indigo-900 font-normal space-y-1">
+                            <p><span class="font-bold text-indigo-950">Dispositivos:</span> 3x Planet First MZ-IES800D</p>
+                            <p><span class="font-bold text-indigo-950">Estado actual:</span> <span class="text-indigo-700 font-bold bg-indigo-100 border border-indigo-200 px-1.5 py-0.5 rounded text-[10px]">EN PROCESO CRÍTICO</span></p>
+                            <p class="bg-white/80 p-2 rounded border border-indigo-100 text-slate-600 text-[11px] italic mt-1.5">"Daño en la controladora electrónica. Técnicos trabajando para forzar el acceso físico al área de datos. Aún sin acceso; una vez logrado, se procederá al espejado." — Técnico Juan Pablo.</p>
+                            <p class="text-[10px] font-bold text-indigo-950 mt-1">🗓️ Fecha Est. Finalización: 07/07/2026</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-emerald-950">
+                        <p class="font-bold">🚀 Plan de Mitigación / Contingencia:</p>
+                        <p class="mt-1 text-slate-700 text-[11px] font-normal">Se acelera la transición definitiva hacia <span class="font-bold text-emerald-700">Odoo ERP</span>. Se utiliza como base operativa firme un corte de inventario/valorización de stock realizado el <span class="font-semibold text-slate-900">30 de abril de 2026</span> para regularizar saldos.</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
 
     <script>
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22ggt7WrMMsyKg31ztolq1w2fW-S2uS-FfCwrm5E69za5TKcBZTgHImRN-GvchqjFXV4TBdxPhjRO/pub?gid=1194472761&single=true&output=csv';
@@ -248,12 +231,11 @@
 
         Chart.defaults.color = '#64748b';
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-        Chart.defaults.font.size = 11;
 
         function fetchData() {
             const statusEl = document.getElementById('status');
-            statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Sincronizando...`;
-            statusEl.className = "flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
+            statusEl.innerHTML = `Sincronizando...`;
+            statusEl.className = "bg-amber-50 text-amber-700 border border-amber-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
 
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
                 download: true,
@@ -261,99 +243,100 @@
                 skipEmptyLines: true,
                 complete: function(results) {
                     allData = results.data.filter(row => row['Marca temporal']);
+                    extractYears(allData);
                     populateDropdowns(allData);
                     applyFilters();
-                    statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Conectado en vivo`;
-                    statusEl.className = "flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
-                },
-                error: function(err) {
-                    console.error("Error cargando CSV:", err);
-                    statusEl.innerHTML = `⚠️ Error de Lectura`;
-                    statusEl.className = "flex items-center gap-2 bg-rose-50 text-rose-700 border border-rose-200 px-3.5 py-1.5 rounded-full text-xs font-semibold";
+                    statusEl.innerHTML = `Conectado en vivo`;
+                    statusEl.className = "bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
                 }
             });
+        }
+
+        function extractYears(data) {
+            const years = new Set();
+            data.forEach(row => {
+                const datePart = row['Marca temporal']?.split(' ')[0];
+                if (datePart && datePart.includes('/')) {
+                    const parts = datePart.split('/');
+                    if (parts[2]) years.add(parts[2]);
+                }
+            });
+            const selectYear = document.getElementById('filter-year');
+            const current = selectYear.value;
+            selectYear.innerHTML = '<option value="ALL">📅 Todos</option>';
+            [...years].sort().forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y; opt.textContent = y;
+                selectYear.appendChild(opt);
+            });
+            selectYear.value = current;
         }
 
         function populateDropdowns(data) {
             const areas = [...new Set(data.map(r => r['Área / Sector'] || 'Sin Asignar'))].filter(Boolean).sort();
-            fillSelect('filter-area', areas, '🏢 Todas las Áreas');
+            fillSelect('filter-area', areas, '🏢 Todas');
 
             const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
-            fillSelect('filter-category', cats, '📂 Todas las Categorías');
-
-            const tipos = [...new Set(data.map(r => r['Tipo de solicitud'] || 'General'))].filter(Boolean).sort();
-            fillSelect('filter-type', tipos, '📌 Todos los Tipos');
+            fillSelect('filter-category', cats, '📂 Todas');
         }
 
-        function fillSelect(id, list, defaultText) {
+        function fillSelect(id, list, defText) {
             const select = document.getElementById(id);
-            const currentVal = select.value;
-            select.innerHTML = `<option value="ALL">${defaultText}</option>`;
-            list.forEach(item => {
+            const val = select.value;
+            select.innerHTML = `<option value="ALL">${defText}</option>`;
+            list.forEach(i => {
                 const opt = document.createElement('option');
-                opt.value = item;
-                opt.textContent = item;
+                opt.value = i; opt.textContent = i;
                 select.appendChild(opt);
             });
-            if (list.includes(currentVal)) select.value = currentVal;
+            if(list.includes(val)) select.value = val;
         }
 
         function resetAllFilters() {
             document.getElementById('filter-search').value = '';
+            document.getElementById('filter-year').value = 'ALL';
+            document.getElementById('filter-month').value = 'ALL';
             document.getElementById('filter-area').value = 'ALL';
             document.getElementById('filter-category').value = 'ALL';
-            document.getElementById('filter-type').value = 'ALL';
             document.getElementById('filter-priority').value = 'ALL';
             applyFilters();
         }
 
-        function filterByPriorityGroup(type) {
+        function filterByPriorityQuick() {
             resetAllFilters();
-            if (type === 'high') {
-                document.getElementById('filter-priority').value = 'Crítica';
-            }
-            applyFilters();
-        }
-
-        function filterByTypeGroup(keyword) {
-            resetAllFilters();
-            const select = document.getElementById('filter-type');
-            for (let i = 0; i < select.options.length; i++) {
-                if (select.options[i].value.includes(keyword)) {
-                    select.selectedIndex = i;
-                    break;
-                }
-            }
+            document.getElementById('filter-priority').value = 'Crítica';
             applyFilters();
         }
 
         function applyFilters() {
-            const searchVal = document.getElementById('filter-search').value.toLowerCase().trim();
-            const areaVal = document.getElementById('filter-area').value;
-            const catVal = document.getElementById('filter-category').value;
-            const typeVal = document.getElementById('filter-type').value;
-            const prioVal = document.getElementById('filter-priority').value;
+            const sVal = document.getElementById('filter-search').value.toLowerCase().trim();
+            const yVal = document.getElementById('filter-year').value;
+            const mVal = document.getElementById('filter-month').value;
+            const aVal = document.getElementById('filter-area').value;
+            const cVal = document.getElementById('filter-category').value;
+            const pVal = document.getElementById('filter-priority').value;
 
-            const hasFilter = searchVal !== '' || areaVal !== 'ALL' || catVal !== 'ALL' || typeVal !== 'ALL' || prioVal !== 'ALL';
-            const btnReset = document.getElementById('btn-reset');
-            if (hasFilter) {
-                btnReset.classList.remove('hidden');
-                btnReset.classList.add('flex');
-            } else {
-                btnReset.classList.add('hidden');
-                btnReset.classList.remove('flex');
-            }
+            const hasF = sVal!=='' || yVal!=='ALL' || mVal!=='ALL' || aVal!=='ALL' || cVal!=='ALL' || pVal!=='ALL';
+            document.getElementById('btn-reset').className = hasF ? "flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm" : "hidden";
 
             const filtered = allData.filter(row => {
                 const desc = (row['Descripción del problema o solicitud'] || '').toLowerCase();
                 const mail = (row['Dirección de correo electrónico'] || '').toLowerCase();
-                const matchSearch = searchVal === '' || desc.includes(searchVal) || mail.includes(searchVal);
-                const matchArea = (areaVal === 'ALL') || (row['Área / Sector'] === areaVal);
-                const matchCat = (catVal === 'ALL') || (row['Categoría del problema'] === catVal);
-                const matchType = (typeVal === 'ALL') || (row['Tipo de solicitud'] === typeVal);
-                const matchPrio = (prioVal === 'ALL') || (row['Prioridad'] === prioVal);
+                
+                // Procesar fechas de la marca temporal
+                const datePart = row['Marca temporal']?.split(' ')[0] || '';
+                const parts = datePart.split('/');
+                const rMonth = parts[1] ? parseInt(parts[1], 10).toString() : '';
+                const rYear = parts[2] || '';
 
-                return matchSearch && matchArea && matchCat && matchType && matchPrio;
+                const mS = sVal === '' || desc.includes(sVal) || mail.includes(sVal);
+                const mY = yVal === 'ALL' || rYear === yVal;
+                const mM = mVal === 'ALL' || rMonth === mVal;
+                const mA = aVal === 'ALL' || row['Área / Sector'] === aVal;
+                const mC = cVal === 'ALL' || row['Categoría del problema'] === cVal;
+                const mP = pVal === 'ALL' || row['Prioridad'] === pVal;
+
+                return mS && mY && mM && mA && mC && mP;
             });
 
             document.getElementById('total-count').innerText = allData.length;
@@ -366,18 +349,13 @@
 
         function renderKPIs(data) {
             document.getElementById('kpi-total').innerText = data.length;
-            const high = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
-            document.getElementById('kpi-high').innerText = high;
-            const incidents = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('incidente')).length;
-            document.getElementById('kpi-incidents').innerText = incidents;
-            const requests = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('solicitud')).length;
-            document.getElementById('kpi-requests').innerText = requests;
+            document.getElementById('kpi-high').innerText = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
+            document.getElementById('kpi-incidents').innerText = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('incidente')).length;
+            document.getElementById('kpi-requests').innerText = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('solicitud')).length;
         }
 
         function renderCharts(data) {
-            const areaCounts = {};
-            const catCounts = {};
-
+            const areaCounts = {}; const catCounts = {};
             data.forEach(row => {
                 const area = row['Área / Sector'] || 'Sin Asignar';
                 const cat = row['Categoría del problema'] || 'Otro';
@@ -385,7 +363,7 @@
                 catCounts[cat] = (catCounts[cat] || 0) + 1;
             });
 
-            const colors = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#64748b'];
+            const colors = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#64748b'];
 
             const areaCtx = document.getElementById('areaChart').getContext('2d');
             if (areaChartInstance) areaChartInstance.destroy();
@@ -393,18 +371,15 @@
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(areaCounts),
-                    datasets: [{ data: Object.values(areaCounts), backgroundColor: colors, borderWidth: 3, borderColor: '#ffffff', hoverOffset: 6 }]
+                    datasets: [{ data: Object.values(areaCounts), backgroundColor: colors, borderWidth: 2, borderColor: '#ffffff' }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11, weight: '600' }, color: '#334155' } } },
-                    cutout: '66%',
-                    onClick: (evt, elements) => {
-                        if (elements.length > 0) {
-                            const index = elements[0].index;
-                            const label = areaChartInstance.data.labels[index];
-                            document.getElementById('filter-area').value = label;
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10, weight: '600' } } } },
+                    cutout: '70%',
+                    onClick: (evt, el) => {
+                        if(el.length > 0) {
+                            document.getElementById('filter-area').value = areaChartInstance.data.labels[el[0].index];
                             applyFilters();
                         }
                     }
@@ -417,21 +392,18 @@
                 type: 'bar',
                 data: {
                     labels: Object.keys(catCounts),
-                    datasets: [{ label: 'Tickets por categoría', data: Object.values(catCounts), backgroundColor: '#6366f1', hoverBackgroundColor: '#4f46e5', borderRadius: 8, borderSkipped: false, maxBarThickness: 45 }]
+                    datasets: [{ data: Object.values(catCounts), backgroundColor: '#6366f1', borderRadius: 6, maxBarThickness: 40 }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#64748b', font: { weight: '500' } }, grid: { color: '#f1f5f9', drawBorder: false } },
-                        x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: '600' } } }
+                        y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
                     },
-                    onClick: (evt, elements) => {
-                        if (elements.length > 0) {
-                            const index = elements[0].index;
-                            const label = categoryChartInstance.data.labels[index];
-                            document.getElementById('filter-category').value = label;
+                    onClick: (evt, el) => {
+                        if(el.length > 0) {
+                            document.getElementById('filter-category').value = categoryChartInstance.data.labels[el[0].index];
                             applyFilters();
                         }
                     }
@@ -445,44 +417,29 @@
             const sorted = [...data].reverse();
 
             if (sorted.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="7" class="p-10 text-center text-slate-400 font-medium bg-slate-50/50">🔍 No se encontraron registros con los filtros actuales. Prueba limpiando los filtros.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 bg-slate-50/50 font-medium">🔍 Sin resultados.</td></tr>`;
                 return;
             }
 
             sorted.forEach(row => {
-                let prioBadge = '<span class="bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold">Normal</span>';
-                if (row['Prioridad'] === 'Crítica') prioBadge = '<span class="bg-rose-100 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full text-xs font-extrabold flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>Crítica</span>';
-                if (row['Prioridad'] === 'Alta') prioBadge = '<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full text-xs font-bold">Alta</span>';
-                if (row['Prioridad'] === 'Media') prioBadge = '<span class="bg-sky-100 text-sky-700 border border-sky-200 px-2.5 py-1 rounded-full text-xs font-bold">Media</span>';
-                if (row['Prioridad'] === 'Baja') prioBadge = '<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full text-xs font-bold">Baja</span>';
+                let pBadge = '<span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-bold border border-slate-200">Normal</span>';
+                if (row['Prioridad'] === 'Crítica') pBadge = '<span class="bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full text-xs font-extrabold flex items-center gap-1 w-fit border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>Crítica</span>';
+                if (row['Prioridad'] === 'Alta') pBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-200">Alta</span>';
+                if (row['Prioridad'] === 'Media') pBadge = '<span class="bg-sky-100 text-sky-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-200">Media</span>';
 
-                let tipoBadge = row['Tipo de solicitud'] || '-';
-                if (tipoBadge.toLowerCase().includes('incidente')) {
-                    tipoBadge = `<span class="text-rose-600 font-medium flex items-center gap-1.5 bg-rose-50 px-2 py-1 rounded-lg border border-rose-100 w-fit"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>${row['Tipo de solicitud']}</span>`;
-                } else {
-                    tipoBadge = `<span class="text-indigo-600 font-medium flex items-center gap-1.5 bg-indigo-50 px-2 py-1 rounded-lg border border-indigo-100 w-fit"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>${row['Tipo de solicitud'] || 'General'}</span>`;
-                }
-
-                const fechaStr = row['Marca temporal'] ? row['Marca temporal'].split(' ')[0] : '-';
-                const horaStr = row['Marca temporal'] && row['Marca temporal'].includes(' ') ? row['Marca temporal'].split(' ')[1] : '';
-                const usuario = row['Dirección de correo electrónico'] ? row['Dirección de correo electrónico'].split('@')[0] : 'Anónimo';
+                const fStr = row['Marca temporal'] ? row['Marca temporal'].split(' ')[0] : '-';
+                const uStr = row['Dirección de correo electrónico'] ? row['Dirección de correo electrónico'].split('@')[0] : 'Anónimo';
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-indigo-50/40 transition duration-150 group";
+                tr.className = "hover:bg-slate-50/80 transition duration-150";
                 tr.innerHTML = `
-                    <td class="p-4 text-slate-500 whitespace-nowrap font-mono text-xs">
-                        <div class="font-bold text-slate-700">${fechaStr}</div>
-                        <div class="text-[10px] text-slate-400">${horaStr}</div>
-                    </td>
-                    <td class="p-4 font-semibold text-slate-800">${usuario}<div class="text-[11px] font-normal text-slate-400">${row['Dirección de correo electrónico'] || ''}</div></td>
-                    <td class="p-4 font-bold text-slate-700">${row['Área / Sector'] || '-'}</td>
-                    <td class="p-4 text-slate-600 font-medium">${row['Categoría del problema'] || '-'}</td>
-                    <td class="p-4">${tipoBadge}</td>
-                    <td class="p-4 text-center">${prioBadge}</td>
-                    <td class="p-4 text-slate-600 max-w-md">
-                        <p class="line-clamp-2 group-hover:line-clamp-none transition-all duration-200 bg-slate-50 group-hover:bg-white p-2 rounded-lg border border-slate-100 group-hover:border-slate-200 group-hover:shadow-sm">${row['Descripción del problema o solicitud'] || '-'}</p>
-                    </td>
-                </td>`;
+                    <td class="p-3 text-slate-500 font-mono text-xs">${fStr}</td>
+                    <td class="p-3 font-semibold text-slate-800">${uStr}</td>
+                    <td class="p-3 font-bold text-slate-700">${row['Área / Sector'] || '-'}</td>
+                    <td class="p-3 text-slate-600 font-medium">${row['Categoría del problema'] || '-'}</td>
+                    <td class="p-3 flex justify-center">${pBadge}</td>
+                    <td class="p-3 text-slate-600 max-w-sm truncate" title="${row['Descripción del problema o solicitud']}">${row['Descripción del problema o solicitud'] || '-'}</td>
+                `;
                 tableBody.appendChild(tr);
             });
         }
