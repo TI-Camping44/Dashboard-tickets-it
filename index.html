@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal IT - Dashboard Interactivo | Mesa de Ayuda</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- PapaParse para leer Google Sheets en tiempo real -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <!-- Google Fonts: Plus Jakarta Sans / Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -39,13 +35,11 @@
 </head>
 <body class="min-h-screen pb-12">
 
-    <!-- Barra Superior / Encabezado -->
     <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-sm backdrop-blur-md bg-white/90">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex items-center gap-4">
-                <!-- LOGO SUBIDO AL GITHUB -->
                 <div class="flex items-center justify-center bg-slate-50 border border-slate-200 p-2 rounded-xl h-14 w-auto min-w-[56px] shadow-sm">
-                    <img src="LOGOC44.png" alt="Logo Camping 44" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<span class='font-bold text-indigo-600 text-lg'>C44</span>';">
+                    <img src="LOGOC44.png" alt="Logo Camping 44" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-bold text-indigo-600 text-lg\'>C44</span>';">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
@@ -75,7 +69,6 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <!-- Panel de Filtros Avanzados -->
         <section class="bg-white border border-slate-200/80 p-5 rounded-2xl mb-6 card-shadow">
             <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
                 <div class="flex items-center gap-2">
@@ -88,7 +81,6 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                <!-- Búsqueda por texto -->
                 <div class="relative">
                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Buscar palabra clave</label>
                     <div class="relative">
@@ -97,7 +89,6 @@
                     </div>
                 </div>
 
-                <!-- Filtro Área -->
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Área / Sector</label>
                     <select id="filter-area" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
@@ -105,7 +96,6 @@
                     </select>
                 </div>
 
-                <!-- Filtro Categoría -->
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Categoría del Problema</label>
                     <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
@@ -113,7 +103,6 @@
                     </select>
                 </div>
 
-                <!-- Filtro Tipo -->
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tipo de Solicitud</label>
                     <select id="filter-type" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
@@ -121,7 +110,6 @@
                     </select>
                 </div>
 
-                <!-- Filtro Prioridad -->
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Prioridad</label>
                     <select id="filter-priority" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
@@ -135,7 +123,6 @@
             </div>
         </section>
 
-        <!-- Tarjetas KPI Interactivas (Sirven como filtro rápido al hacer clic) -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div onclick="resetAllFilters()" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-indigo-500 hover:border-indigo-300">
                 <div class="flex justify-between items-start">
@@ -198,9 +185,7 @@
             </div>
         </section>
 
-        <!-- Gráficos Interactivos -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <!-- Gráfico de Dona: Por Área -->
             <div class="bg-white border border-slate-200/80 p-6 rounded-2xl card-shadow lg:col-span-1 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-1">
@@ -214,7 +199,6 @@
                 </div>
             </div>
 
-            <!-- Gráfico de Barras: Por Categoría -->
             <div class="bg-white border border-slate-200/80 p-6 rounded-2xl card-shadow lg:col-span-2 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-1">
@@ -229,15 +213,11 @@
             </div>
         </section>
 
-        <!-- Tabla Detallada -->
         <section class="bg-white border border-slate-200/80 rounded-2xl card-shadow overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
                     <h3 class="text-base font-bold text-slate-800">Historial de Tickets Registrados</h3>
                     <p class="text-xs text-slate-500 mt-0.5">Listado ordenado desde el más reciente al más antiguo</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-medium text-slate-400">¿No encuentras algo? Usá el buscador de arriba.</span>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -253,15 +233,12 @@
                             <th class="p-4 min-w-[300px]">Descripción del Problema o Solicitud</th>
                         </tr>
                     </thead>
-                    <tbody id="tickets-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm font-normal">
-                        <!-- Generado por JS -->
-                    </tbody>
+                    <tbody id="tickets-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm font-normal"></tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <!-- LÓGICA DE JAVASCRIPT -->
     <script>
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22ggt7WrMMsyKg31ztolq1w2fW-S2uS-FfCwrm5E69za5TKcBZTgHImRN-GvchqjFXV4TBdxPhjRO/pub?gid=1194472761&single=true&output=csv';
 
@@ -269,7 +246,6 @@
         let areaChartInstance = null;
         let categoryChartInstance = null;
 
-        // Configuración visual clara para Chart.js
         Chart.defaults.color = '#64748b';
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
         Chart.defaults.font.size = 11;
@@ -299,15 +275,12 @@
         }
 
         function populateDropdowns(data) {
-            // Áreas
             const areas = [...new Set(data.map(r => r['Área / Sector'] || 'Sin Asignar'))].filter(Boolean).sort();
             fillSelect('filter-area', areas, '🏢 Todas las Áreas');
 
-            // Categorías
             const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
             fillSelect('filter-category', cats, '📂 Todas las Categorías');
 
-            // Tipos de solicitud
             const tipos = [...new Set(data.map(r => r['Tipo de solicitud'] || 'General'))].filter(Boolean).sort();
             fillSelect('filter-type', tipos, '📌 Todos los Tipos');
         }
@@ -337,7 +310,6 @@
         function filterByPriorityGroup(type) {
             resetAllFilters();
             if (type === 'high') {
-                // Seleccionamos Crítica como inicial o filtramos de manera manual
                 document.getElementById('filter-priority').value = 'Crítica';
             }
             applyFilters();
@@ -362,7 +334,6 @@
             const typeVal = document.getElementById('filter-type').value;
             const prioVal = document.getElementById('filter-priority').value;
 
-            // Verificar si hay algún filtro activo para mostrar el botón "Limpiar"
             const hasFilter = searchVal !== '' || areaVal !== 'ALL' || catVal !== 'ALL' || typeVal !== 'ALL' || prioVal !== 'ALL';
             const btnReset = document.getElementById('btn-reset');
             if (hasFilter) {
@@ -414,30 +385,20 @@
                 catCounts[cat] = (catCounts[cat] || 0) + 1;
             });
 
-            // Colores limpios y vibrantes para tema claro
             const colors = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#64748b'];
 
-            // Gráfico de Área (Dona Interactiva)
             const areaCtx = document.getElementById('areaChart').getContext('2d');
             if (areaChartInstance) areaChartInstance.destroy();
             areaChartInstance = new Chart(areaCtx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(areaCounts),
-                    datasets: [{
-                        data: Object.values(areaCounts),
-                        backgroundColor: colors,
-                        borderWidth: 3,
-                        borderColor: '#ffffff',
-                        hoverOffset: 6
-                    }]
+                    datasets: [{ data: Object.values(areaCounts), backgroundColor: colors, borderWidth: 3, borderColor: '#ffffff', hoverOffset: 6 }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11, weight: '600' }, color: '#334155' } }
-                    },
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11, weight: '600' }, color: '#334155' } } },
                     cutout: '66%',
                     onClick: (evt, elements) => {
                         if (elements.length > 0) {
@@ -450,37 +411,21 @@
                 }
             });
 
-            // Gráfico de Categoría (Barras Interactivas)
             const catCtx = document.getElementById('categoryChart').getContext('2d');
             if (categoryChartInstance) categoryChartInstance.destroy();
             categoryChartInstance = new Chart(catCtx, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(catCounts),
-                    datasets: [{
-                        label: 'Tickets por categoría',
-                        data: Object.values(catCounts),
-                        backgroundColor: '#6366f1',
-                        hoverBackgroundColor: '#4f46e5',
-                        borderRadius: 8,
-                        borderSkipped: false,
-                        maxBarThickness: 45
-                    }]
+                    datasets: [{ label: 'Tickets por categoría', data: Object.values(catCounts), backgroundColor: '#6366f1', hoverBackgroundColor: '#4f46e5', borderRadius: 8, borderSkipped: false, maxBarThickness: 45 }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            ticks: { stepSize: 1, color: '#64748b', font: { weight: '500' } },
-                            grid: { color: '#f1f5f9', drawBorder: false }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#334155', font: { weight: '600' } }
-                        }
+                        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#64748b', font: { weight: '500' } }, grid: { color: '#f1f5f9', drawBorder: false } },
+                        x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: '600' } } }
                     },
                     onClick: (evt, elements) => {
                         if (elements.length > 0) {
@@ -535,7 +480,7 @@
                     <td class="p-4">${tipoBadge}</td>
                     <td class="p-4 text-center">${prioBadge}</td>
                     <td class="p-4 text-slate-600 max-w-md">
-                        <p class="line-clamp-2 group-hover:line-clamp-none transition-all duration-200 bg-slate-50 group-hover:bg-white p-2 rounded-lg border border-slate-100 group-hover:border-slate-200 group-hover:shadow-sm" title="${row['Descripción del problema o solicitud']}">${row['Descripción del problema o solicitud'] || '-'}</p>
+                        <p class="line-clamp-2 group-hover:line-clamp-none transition-all duration-200 bg-slate-50 group-hover:bg-white p-2 rounded-lg border border-slate-100 group-hover:border-slate-200 group-hover:shadow-sm">${row['Descripción del problema o solicitud'] || '-'}</p>
                     </td>
                 </td>`;
                 tableBody.appendChild(tr);
