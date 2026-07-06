@@ -38,8 +38,8 @@
                     <img src="LOGOC44.png" alt="Logo Camping 44" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-bold text-indigo-600 text-lg\'>C44</span>';">
                 </div>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Tickets IT</h1>
-                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard IT • Camping 44</p>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">+Tickets IT</h1>
+                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard TICKETS INTERNOS • Camping 44</p>
                 </div>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
@@ -104,6 +104,8 @@
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Estado</label>
                         <select id="filter-status" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">📌 Todos</option>
+                            <option value="Pendiente">⏳ Pendiente</option>
+                            <option value="Resuelto">✅ Resuelto</option>
                         </select>
                     </div>
                     <div>
@@ -133,7 +135,7 @@
 
             <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow">
                 <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z" /></svg>
                     Estatus de Planillas / Informes Automatizados
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -191,12 +193,12 @@
                     <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-600 mt-1">0</h2>
                 </div>
                 <div onclick="filterByStatusQuick('Pendiente')" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-amber-500">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pendientes / Abiertos</p>
-                    <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-600 mt-1">0</h2>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pendientes</p>
+                    <h2 id="kpi-pending" class="text-3xl font-extrabold text-amber-600 mt-1">0</h2>
                 </div>
-                <div onclick="filterByStatusQuick('Finalizado')" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-emerald-500">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Finalizados / Resueltos</p>
-                    <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h2>
+                <div onclick="filterByStatusQuick('Resuelto')" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-emerald-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Resueltos</p>
+                    <h2 id="kpi-resolved" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h2>
                 </div>
             </section>
 
@@ -342,9 +344,6 @@
 
             const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
             fillSelect('filter-category', cats, '📂 Todas');
-
-            const stats = [...new Set(data.map(r => r['Estado'] || r['Status'] || 'Pendiente'))].filter(Boolean).sort();
-            fillSelect('filter-status', stats, '📌 Todos');
         }
 
         function fillSelect(id, list, defText) {
@@ -376,16 +375,19 @@
             applyFilters();
         }
 
-        function filterByStatusQuick(keyword) {
+        function filterByStatusQuick(statusType) {
             resetAllFilters();
-            const select = document.getElementById('filter-status');
-            for(let i=0; i<select.options.length; i++) {
-                if(select.options[i].value.toLowerCase().includes(keyword.toLowerCase())) {
-                    select.selectedIndex = i;
-                    break;
-                }
-            }
+            document.getElementById('filter-status').value = statusType;
             applyFilters();
+        }
+
+        // FUNCIÓN BINARIA: Devuelve "Resuelto" únicamente si encuentra las palabras clave. Todo lo demás es "Pendiente".
+        function getBinaryStatus(row) {
+            const st = (row['Estado'] || row['Status'] || '').toString().toLowerCase().trim();
+            if (st.includes('resuelt') || st.includes('fin') || st.includes('cerrad') || st === 'resuelto' || st === 'finalizado') {
+                return 'Resuelto';
+            }
+            return 'Pendiente';
         }
 
         function applyFilters() {
@@ -403,9 +405,8 @@
             const filtered = allData.filter(row => {
                 const desc = (row['Descripción del problema o solicitud'] || '').toLowerCase();
                 const mail = (row['Dirección de correo electrónico'] || '').toLowerCase();
-                const rStatus = row['Estado'] || row['Status'] || 'Pendiente';
+                const rStatus = getBinaryStatus(row);
                 
-                // Procesar fechas de la marca temporal
                 const datePart = row['Marca temporal']?.split(' ')[0] || '';
                 const parts = datePart.split('/');
                 const rMonth = parts[1] ? parseInt(parts[1], 10).toString() : '';
@@ -434,17 +435,12 @@
             document.getElementById('kpi-total').innerText = data.length;
             document.getElementById('kpi-high').innerText = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
             
-            const pend = data.filter(r => {
-                const st = (r['Estado'] || r['Status'] || 'Pendiente').toLowerCase();
-                return st.includes('pend') || st.includes('abierto') || st.includes('proceso') || st.includes('inici');
-            }).length;
-            const fin = data.filter(r => {
-                const st = (r['Estado'] || r['Status'] || '').toLowerCase();
-                return st.includes('fin') || st.includes('resuelt') || st.includes('cerrad') || st.includes('listo');
-            }).length;
+            // Conteo binario estricto para los KPIs
+            const pend = data.filter(r => getBinaryStatus(r) === 'Pendiente').length;
+            const res = data.filter(r => getBinaryStatus(r) === 'Resuelto').length;
 
-            document.getElementById('kpi-incidents').innerText = pend;
-            document.getElementById('kpi-requests').innerText = fin;
+            document.getElementById('kpi-pending').innerText = pend;
+            document.getElementById('kpi-resolved').innerText = res;
         }
 
         function renderCharts(data) {
@@ -520,10 +516,11 @@
                 if (row['Prioridad'] === 'Alta') pBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-200">Alta</span>';
                 if (row['Prioridad'] === 'Media') pBadge = '<span class="bg-sky-100 text-sky-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-200">Media</span>';
 
-                const stText = row['Estado'] || row['Status'] || 'Pendiente';
-                let stBadge = `<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>${stText}</span>`;
-                if(stText.toLowerCase().includes('fin') || stText.toLowerCase().includes('resuelt') || stText.toLowerCase().includes('cerrad')) {
-                    stBadge = `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>${stText}</span>`;
+                // Lógica visual estricta para el ESTADO BINARIO
+                const stText = getBinaryStatus(row);
+                let stBadge = `<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pendiente</span>`;
+                if(stText === 'Resuelto') {
+                    stBadge = `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Resuelto</span>`;
                 }
 
                 const fStr = row['Marca temporal'] ? row['Marca temporal'].split(' ')[0] : '-';
@@ -547,4 +544,5 @@
         window.addEventListener('DOMContentLoaded', fetchData);
     </script>
 </body>
+</html>
 </html>
