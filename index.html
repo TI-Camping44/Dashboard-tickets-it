@@ -3,119 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Tickets IT | GitHub Pages</title>
-    <!-- Tailwind CSS para diseño moderno -->
+    <title>Portal IT - Dashboard Interactivo | Mesa de Ayuda</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js para gráficos interactivos -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- PapaParse para conectar con Google Sheets CSV -->
+    <!-- PapaParse para leer Google Sheets en tiempo real -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Google Fonts: Plus Jakarta Sans / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        /* Scrollbar personalizado para la tabla */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        /* Scrollbar suave y estético */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+        }
+        .card-shadow-hover:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+        }
+        .transition-all-fast {
+            transition: all 0.2s ease-in-out;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+<body class="min-h-screen pb-12">
 
-    <!-- Navbar / Encabezado -->
-    <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
-        <div class="flex items-center gap-3">
-            <div class="p-3 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-indigo-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+    <!-- Barra Superior / Encabezado -->
+    <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-sm backdrop-blur-md bg-white/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="flex items-center gap-4">
+                <!-- LOGO SUBIDO AL GITHUB -->
+                <div class="flex items-center justify-center bg-slate-50 border border-slate-200 p-2 rounded-xl h-14 w-auto min-w-[56px] shadow-sm">
+                    <img src="LOGOC44.png" alt="Logo Camping 44" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<span class='font-bold text-indigo-600 text-lg'>C44</span>';">
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Mesa de Ayuda & Tickets IT</h1>
+                        <span class="bg-indigo-50 text-indigo-700 border border-indigo-200/60 text-xs font-semibold px-2.5 py-0.5 rounded-full">v2.0</span>
+                    </div>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-0.5 font-medium">Dashboard analítico en tiempo real • Camping 44</p>
+                </div>
             </div>
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Dashboard de Mesa de Ayuda (IT)</h1>
-                <p class="text-slate-400 text-sm mt-0.5">Monitoreo en tiempo real sincronizado desde Google Sheets</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-            <button onclick="fetchData()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 text-xs transition duration-150">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Actualizar
-            </button>
-            <div id="status" class="flex items-center gap-2 bg-emerald-950/60 text-emerald-400 border border-emerald-800/80 px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Conectado en vivo
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                <button onclick="resetAllFilters()" id="btn-reset" class="hidden items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition duration-150 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    Limpiar Filtros
+                </button>
+                <button onclick="fetchData()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-3.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold transition duration-150 shadow-sm hover:border-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Actualizar
+                </button>
+                <div id="status" class="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Conectado en vivo
+                </div>
             </div>
         </div>
     </header>
 
-    <div class="max-w-7xl mx-auto">
-        <!-- Barra de Filtros -->
-        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl mb-8 flex flex-wrap items-center gap-4 justify-between">
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Filtros:</span>
-                <select id="filter-area" onchange="applyFilters()" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500">
-                    <option value="ALL">Todas las Áreas</option>
-                </select>
-                <select id="filter-priority" onchange="applyFilters()" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500">
-                    <option value="ALL">Todas las Prioridades</option>
-                    <option value="Crítica">Crítica</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
-                    <option value="Baja">Baja</option>
-                </select>
-            </div>
-            <div class="text-xs text-slate-400">
-                Mostrando: <span id="displayed-count" class="font-bold text-white">0</span> de <span id="total-count" class="font-bold text-white">0</span> tickets
-            </div>
-        </div>
-
-        <!-- Tarjetas KPI -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
-                <div class="absolute right-3 top-3 bg-indigo-500/10 p-2 rounded-lg text-indigo-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <!-- Panel de Filtros Avanzados -->
+        <section class="bg-white border border-slate-200/80 p-5 rounded-2xl mb-6 card-shadow">
+            <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                    <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Filtros Multicriterio (Haz clic en los gráficos o selecciona aquí)</h2>
                 </div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tickets en Vista</p>
-                <h2 id="kpi-total" class="text-3xl font-extrabold text-white mt-2">0</h2>
-                <p class="text-xs text-slate-500 mt-2">Volumen de solicitudes</p>
-            </div>
-
-            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
-                <div class="absolute right-3 top-3 bg-rose-500/10 p-2 rounded-lg text-rose-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <div class="text-xs font-medium text-slate-500">
+                    Mostrando <span id="displayed-count" class="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">0</span> de <span id="total-count" class="font-bold text-slate-700">0</span> tickets
                 </div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Críticos o Altos</p>
-                <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-500 mt-2">0</h2>
-                <p class="text-xs text-rose-400/80 mt-2">Requieren atención prioritaria</p>
             </div>
 
-            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
-                <div class="absolute right-3 top-3 bg-amber-500/10 p-2 rounded-lg text-amber-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                <!-- Búsqueda por texto -->
+                <div class="relative">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Buscar palabra clave</label>
+                    <div class="relative">
+                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Ej: impresora, correo..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl pl-8 pr-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400 absolute left-2.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
                 </div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Incidentes</p>
-                <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-400 mt-2">0</h2>
-                <p class="text-xs text-slate-500 mt-2">Fallos de sistema / Hardware</p>
-            </div>
 
-            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
-                <div class="absolute right-3 top-3 bg-emerald-500/10 p-2 rounded-lg text-emerald-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                </div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Solicitudes / Nuevos</p>
-                <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-400 mt-2">0</h2>
-                <p class="text-xs text-slate-500 mt-2">Acceso, equipos, pautas</p>
-            </div>
-        </div>
-
-        <!-- Gráficos -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Gráfico de Dona: Por Área -->
-            <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl lg:col-span-1 flex flex-col justify-between">
+                <!-- Filtro Área -->
                 <div>
-                    <h3 class="text-base font-semibold text-slate-200 mb-1">Tickets por Área / Sector</h3>
-                    <p class="text-xs text-slate-400 mb-4">Distribución del soporte solicitado</p>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Área / Sector</label>
+                    <select id="filter-area" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
+                        <option value="ALL">🏢 Todas las Áreas</option>
+                    </select>
+                </div>
+
+                <!-- Filtro Categoría -->
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Categoría del Problema</label>
+                    <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
+                        <option value="ALL">📂 Todas las Categorías</option>
+                    </select>
+                </div>
+
+                <!-- Filtro Tipo -->
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tipo de Solicitud</label>
+                    <select id="filter-type" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
+                        <option value="ALL">📌 Todos los Tipos</option>
+                    </select>
+                </div>
+
+                <!-- Filtro Prioridad -->
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Prioridad</label>
+                    <select id="filter-priority" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 font-medium transition cursor-pointer">
+                        <option value="ALL">⚡ Todas las Prioridades</option>
+                        <option value="Crítica">🚨 Crítica</option>
+                        <option value="Alta">🔴 Alta</option>
+                        <option value="Media">🟡 Media</option>
+                        <option value="Baja">🟢 Baja</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tarjetas KPI Interactivas (Sirven como filtro rápido al hacer clic) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div onclick="resetAllFilters()" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-indigo-500 hover:border-indigo-300">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total en Vista</p>
+                        <h2 id="kpi-total" class="text-3xl font-extrabold text-slate-900 mt-1.5 group-hover:text-indigo-600 transition">0</h2>
+                    </div>
+                    <div class="p-2.5 bg-indigo-50 rounded-xl text-indigo-600 group-hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 mt-3 flex items-center gap-1 font-medium">
+                    <span class="text-indigo-600">👆 Clic para ver todos</span>
+                </p>
+            </div>
+
+            <div onclick="filterByPriorityGroup('high')" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-rose-500 hover:border-rose-300">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Críticos o Altos</p>
+                        <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-600 mt-1.5 group-hover:text-rose-700 transition">0</h2>
+                    </div>
+                    <div class="p-2.5 bg-rose-50 rounded-xl text-rose-600 group-hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-rose-600/80 mt-3 flex items-center gap-1 font-semibold">
+                    <span>🔥 Clic para filtrar urgentes</span>
+                </p>
+            </div>
+
+            <div onclick="filterByTypeGroup('Incidente')" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-amber-500 hover:border-amber-300">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Incidentes</p>
+                        <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-600 mt-1.5 group-hover:text-amber-700 transition">0</h2>
+                    </div>
+                    <div class="p-2.5 bg-amber-50 rounded-xl text-amber-600 group-hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-amber-700/80 mt-3 flex items-center gap-1 font-semibold">
+                    <span>⚠️ Clic para ver fallos</span>
+                </p>
+            </div>
+
+            <div onclick="filterByTypeGroup('Solicitud')" class="bg-white border border-slate-200/80 p-5 rounded-2xl card-shadow card-shadow-hover transition-all-fast cursor-pointer group border-l-4 border-l-emerald-500 hover:border-emerald-300">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Solicitudes Nuevas</p>
+                        <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-600 mt-1.5 group-hover:text-emerald-700 transition">0</h2>
+                    </div>
+                    <div class="p-2.5 bg-emerald-50 rounded-xl text-emerald-600 group-hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-emerald-700/80 mt-3 flex items-center gap-1 font-semibold">
+                    <span>✨ Clic para ver pedidos</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Gráficos Interactivos -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Gráfico de Dona: Por Área -->
+            <div class="bg-white border border-slate-200/80 p-6 rounded-2xl card-shadow lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-base font-bold text-slate-800">Tickets por Área / Sector</h3>
+                        <span class="text-[10px] bg-slate-100 text-slate-500 font-semibold px-2 py-0.5 rounded">Interactivo</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Haz clic en una sección para filtrar esa área</p>
                 </div>
                 <div class="h-64 relative flex items-center justify-center">
                     <canvas id="areaChart"></canvas>
@@ -123,105 +215,174 @@
             </div>
 
             <!-- Gráfico de Barras: Por Categoría -->
-            <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl lg:col-span-2 flex flex-col justify-between">
+            <div class="bg-white border border-slate-200/80 p-6 rounded-2xl card-shadow lg:col-span-2 flex flex-col justify-between">
                 <div>
-                    <h3 class="text-base font-semibold text-slate-200 mb-1">Categorías de Problemas</h3>
-                    <p class="text-xs text-slate-400 mb-4">Clasificación detallada de incidentes y requerimientos</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-base font-bold text-slate-800">Categorías de Problemas</h3>
+                        <span class="text-[10px] bg-slate-100 text-slate-500 font-semibold px-2 py-0.5 rounded">Interactivo</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Clasificación de incidentes • Haz clic en una barra para filtrar</p>
                 </div>
                 <div class="h-64 relative">
                     <canvas id="categoryChart"></canvas>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Tabla Detallada -->
-        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 overflow-hidden">
-            <div class="flex justify-between items-center mb-6">
+        <section class="bg-white border border-slate-200/80 rounded-2xl card-shadow overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h3 class="text-base font-semibold text-slate-200">Listado de Tickets Recientes</h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Muestra los registros según los filtros seleccionados</p>
+                    <h3 class="text-base font-bold text-slate-800">Historial de Tickets Registrados</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Listado ordenado desde el más reciente al más antiguo</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-slate-400">¿No encuentras algo? Usá el buscador de arriba.</span>
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-300">
-                    <thead class="bg-slate-950/80 text-slate-400 uppercase text-xs border-y border-slate-800 font-semibold">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] border-b border-slate-200 font-bold tracking-wider">
                         <tr>
-                            <th class="p-3.5">Fecha</th>
-                            <th class="p-3.5">Área / Sector</th>
-                            <th class="p-3.5">Categoría</th>
-                            <th class="p-3.5">Tipo</th>
-                            <th class="p-3.5">Prioridad</th>
-                            <th class="p-3.5 min-w-[250px]">Descripción</th>
+                            <th class="p-4 whitespace-nowrap">Fecha / Hora</th>
+                            <th class="p-4">Usuario / Correo</th>
+                            <th class="p-4">Área / Sector</th>
+                            <th class="p-4">Categoría</th>
+                            <th class="p-4">Tipo</th>
+                            <th class="p-4 text-center">Prioridad</th>
+                            <th class="p-4 min-w-[300px]">Descripción del Problema o Solicitud</th>
                         </tr>
                     </thead>
-                    <tbody id="tickets-table-body" class="divide-y divide-slate-800/60 text-xs md:text-sm">
+                    <tbody id="tickets-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm font-normal">
                         <!-- Generado por JS -->
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- LÓGICA DE JAVASCRIPT -->
     <script>
-        // URL Oficial conectada a tu Google Sheets
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22ggt7WrMMsyKg31ztolq1w2fW-S2uS-FfCwrm5E69za5TKcBZTgHImRN-GvchqjFXV4TBdxPhjRO/pub?gid=1194472761&single=true&output=csv';
 
         let allData = [];
         let areaChartInstance = null;
         let categoryChartInstance = null;
 
-        // Configuración de estilo global para Chart.js
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.font.family = "'Inter', sans-serif";
+        // Configuración visual clara para Chart.js
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.font.size = 11;
 
         function fetchData() {
             const statusEl = document.getElementById('status');
             statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Sincronizando...`;
-            statusEl.className = "flex items-center gap-2 bg-amber-950/60 text-amber-400 border border-amber-800/80 px-3 py-1.5 rounded-full text-xs font-medium";
+            statusEl.className = "flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
 
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
                 download: true,
                 header: true,
                 skipEmptyLines: true,
                 complete: function(results) {
-                    allData = results.data.filter(row => row['Marca temporal']); // Ignorar filas sin fecha
-                    populateAreaFilter(allData);
+                    allData = results.data.filter(row => row['Marca temporal']);
+                    populateDropdowns(allData);
                     applyFilters();
                     statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Conectado en vivo`;
-                    statusEl.className = "flex items-center gap-2 bg-emerald-950/60 text-emerald-400 border border-emerald-800/80 px-3 py-1.5 rounded-full text-xs font-medium shadow-sm";
+                    statusEl.className = "flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
                 },
                 error: function(err) {
                     console.error("Error cargando CSV:", err);
                     statusEl.innerHTML = `⚠️ Error de Lectura`;
-                    statusEl.className = "flex items-center gap-2 bg-rose-950/60 text-rose-400 border border-rose-800/80 px-3 py-1.5 rounded-full text-xs font-medium";
+                    statusEl.className = "flex items-center gap-2 bg-rose-50 text-rose-700 border border-rose-200 px-3.5 py-1.5 rounded-full text-xs font-semibold";
                 }
             });
         }
 
-        function populateAreaFilter(data) {
-            const filterArea = document.getElementById('filter-area');
-            const currentVal = filterArea.value;
-            const areas = [...new Set(data.map(r => r['Área / Sector'] || 'Sin Asignar'))].filter(Boolean);
-            
-            filterArea.innerHTML = '<option value="ALL">Todas las Áreas</option>';
-            areas.sort().forEach(area => {
+        function populateDropdowns(data) {
+            // Áreas
+            const areas = [...new Set(data.map(r => r['Área / Sector'] || 'Sin Asignar'))].filter(Boolean).sort();
+            fillSelect('filter-area', areas, '🏢 Todas las Áreas');
+
+            // Categorías
+            const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
+            fillSelect('filter-category', cats, '📂 Todas las Categorías');
+
+            // Tipos de solicitud
+            const tipos = [...new Set(data.map(r => r['Tipo de solicitud'] || 'General'))].filter(Boolean).sort();
+            fillSelect('filter-type', tipos, '📌 Todos los Tipos');
+        }
+
+        function fillSelect(id, list, defaultText) {
+            const select = document.getElementById(id);
+            const currentVal = select.value;
+            select.innerHTML = `<option value="ALL">${defaultText}</option>`;
+            list.forEach(item => {
                 const opt = document.createElement('option');
-                opt.value = area;
-                opt.textContent = area;
-                filterArea.appendChild(opt);
+                opt.value = item;
+                opt.textContent = item;
+                select.appendChild(opt);
             });
-            filterArea.value = currentVal;
+            if (list.includes(currentVal)) select.value = currentVal;
+        }
+
+        function resetAllFilters() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-area').value = 'ALL';
+            document.getElementById('filter-category').value = 'ALL';
+            document.getElementById('filter-type').value = 'ALL';
+            document.getElementById('filter-priority').value = 'ALL';
+            applyFilters();
+        }
+
+        function filterByPriorityGroup(type) {
+            resetAllFilters();
+            if (type === 'high') {
+                // Seleccionamos Crítica como inicial o filtramos de manera manual
+                document.getElementById('filter-priority').value = 'Crítica';
+            }
+            applyFilters();
+        }
+
+        function filterByTypeGroup(keyword) {
+            resetAllFilters();
+            const select = document.getElementById('filter-type');
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value.includes(keyword)) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+            applyFilters();
         }
 
         function applyFilters() {
+            const searchVal = document.getElementById('filter-search').value.toLowerCase().trim();
             const areaVal = document.getElementById('filter-area').value;
+            const catVal = document.getElementById('filter-category').value;
+            const typeVal = document.getElementById('filter-type').value;
             const prioVal = document.getElementById('filter-priority').value;
 
+            // Verificar si hay algún filtro activo para mostrar el botón "Limpiar"
+            const hasFilter = searchVal !== '' || areaVal !== 'ALL' || catVal !== 'ALL' || typeVal !== 'ALL' || prioVal !== 'ALL';
+            const btnReset = document.getElementById('btn-reset');
+            if (hasFilter) {
+                btnReset.classList.remove('hidden');
+                btnReset.classList.add('flex');
+            } else {
+                btnReset.classList.add('hidden');
+                btnReset.classList.remove('flex');
+            }
+
             const filtered = allData.filter(row => {
+                const desc = (row['Descripción del problema o solicitud'] || '').toLowerCase();
+                const mail = (row['Dirección de correo electrónico'] || '').toLowerCase();
+                const matchSearch = searchVal === '' || desc.includes(searchVal) || mail.includes(searchVal);
                 const matchArea = (areaVal === 'ALL') || (row['Área / Sector'] === areaVal);
+                const matchCat = (catVal === 'ALL') || (row['Categoría del problema'] === catVal);
+                const matchType = (typeVal === 'ALL') || (row['Tipo de solicitud'] === typeVal);
                 const matchPrio = (prioVal === 'ALL') || (row['Prioridad'] === prioVal);
-                return matchArea && matchPrio;
+
+                return matchSearch && matchArea && matchCat && matchType && matchPrio;
             });
 
             document.getElementById('total-count').innerText = allData.length;
@@ -234,19 +395,15 @@
 
         function renderKPIs(data) {
             document.getElementById('kpi-total').innerText = data.length;
-            
             const high = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
             document.getElementById('kpi-high').innerText = high;
-
             const incidents = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('incidente')).length;
             document.getElementById('kpi-incidents').innerText = incidents;
-
             const requests = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('solicitud')).length;
             document.getElementById('kpi-requests').innerText = requests;
         }
 
         function renderCharts(data) {
-            // 1. Datos para Gráfico de Áreas
             const areaCounts = {};
             const catCounts = {};
 
@@ -257,10 +414,10 @@
                 catCounts[cat] = (catCounts[cat] || 0) + 1;
             });
 
-            // Colores modernos de Tailwind
-            const colors = ['#6366f1', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#14b8a6'];
+            // Colores limpios y vibrantes para tema claro
+            const colors = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#64748b'];
 
-            // Render Gráfico de Área (Dona)
+            // Gráfico de Área (Dona Interactiva)
             const areaCtx = document.getElementById('areaChart').getContext('2d');
             if (areaChartInstance) areaChartInstance.destroy();
             areaChartInstance = new Chart(areaCtx, {
@@ -270,21 +427,30 @@
                     datasets: [{
                         data: Object.values(areaCounts),
                         backgroundColor: colors,
-                        borderWidth: 2,
-                        borderColor: '#0f172a'
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverOffset: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 15, font: { size: 11 } } }
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11, weight: '600' }, color: '#334155' } }
                     },
-                    cutout: '68%'
+                    cutout: '66%',
+                    onClick: (evt, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const label = areaChartInstance.data.labels[index];
+                            document.getElementById('filter-area').value = label;
+                            applyFilters();
+                        }
+                    }
                 }
             });
 
-            // Render Gráfico de Categoría (Barras horizontales o verticales)
+            // Gráfico de Categoría (Barras Interactivas)
             const catCtx = document.getElementById('categoryChart').getContext('2d');
             if (categoryChartInstance) categoryChartInstance.destroy();
             categoryChartInstance = new Chart(catCtx, {
@@ -292,12 +458,13 @@
                 data: {
                     labels: Object.keys(catCounts),
                     datasets: [{
-                        label: 'Incidencias',
+                        label: 'Tickets por categoría',
                         data: Object.values(catCounts),
                         backgroundColor: '#6366f1',
-                        hoverBackgroundColor: '#818cf8',
-                        borderRadius: 6,
-                        borderSkipped: false
+                        hoverBackgroundColor: '#4f46e5',
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        maxBarThickness: 45
                     }]
                 },
                 options: {
@@ -307,12 +474,20 @@
                     scales: {
                         y: { 
                             beginAtZero: true, 
-                            ticks: { stepSize: 1, font: { size: 11 } },
-                            grid: { color: 'rgba(51, 65, 85, 0.4)' }
+                            ticks: { stepSize: 1, color: '#64748b', font: { weight: '500' } },
+                            grid: { color: '#f1f5f9', drawBorder: false }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { font: { size: 11 } }
+                            ticks: { color: '#334155', font: { weight: '600' } }
+                        }
+                    },
+                    onClick: (evt, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const label = categoryChartInstance.data.labels[index];
+                            document.getElementById('filter-category').value = label;
+                            applyFilters();
                         }
                     }
                 }
@@ -322,45 +497,51 @@
         function renderTable(data) {
             const tableBody = document.getElementById('tickets-table-body');
             tableBody.innerHTML = '';
-
-            // Mostrar ordenados por más recientes (asumiendo que las últimas filas del sheets son más nuevas)
             const sorted = [...data].reverse();
 
             if (sorted.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No se encontraron tickets con los filtros actuales.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="7" class="p-10 text-center text-slate-400 font-medium bg-slate-50/50">🔍 No se encontraron registros con los filtros actuales. Prueba limpiando los filtros.</td></tr>`;
                 return;
             }
 
             sorted.forEach(row => {
-                let prioBadge = '<span class="bg-slate-800 text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium border border-slate-700">Normal</span>';
-                if (row['Prioridad'] === 'Crítica') prioBadge = '<span class="bg-rose-950/80 text-rose-400 border border-rose-800 px-2.5 py-1 rounded-md text-xs font-bold animate-pulse">Crítica</span>';
-                if (row['Prioridad'] === 'Alta') prioBadge = '<span class="bg-amber-950/80 text-amber-400 border border-amber-800/80 px-2.5 py-1 rounded-md text-xs font-semibold">Alta</span>';
-                if (row['Prioridad'] === 'Media') prioBadge = '<span class="bg-sky-950/80 text-sky-400 border border-sky-800/80 px-2.5 py-1 rounded-md text-xs font-medium">Media</span>';
+                let prioBadge = '<span class="bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold">Normal</span>';
+                if (row['Prioridad'] === 'Crítica') prioBadge = '<span class="bg-rose-100 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full text-xs font-extrabold flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>Crítica</span>';
+                if (row['Prioridad'] === 'Alta') prioBadge = '<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full text-xs font-bold">Alta</span>';
+                if (row['Prioridad'] === 'Media') prioBadge = '<span class="bg-sky-100 text-sky-700 border border-sky-200 px-2.5 py-1 rounded-full text-xs font-bold">Media</span>';
+                if (row['Prioridad'] === 'Baja') prioBadge = '<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full text-xs font-bold">Baja</span>';
 
                 let tipoBadge = row['Tipo de solicitud'] || '-';
                 if (tipoBadge.toLowerCase().includes('incidente')) {
-                    tipoBadge = `<span class="text-rose-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>${row['Tipo de solicitud']}</span>`;
+                    tipoBadge = `<span class="text-rose-600 font-medium flex items-center gap-1.5 bg-rose-50 px-2 py-1 rounded-lg border border-rose-100 w-fit"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>${row['Tipo de solicitud']}</span>`;
                 } else {
-                    tipoBadge = `<span class="text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>${row['Tipo de solicitud'] || 'General'}</span>`;
+                    tipoBadge = `<span class="text-indigo-600 font-medium flex items-center gap-1.5 bg-indigo-50 px-2 py-1 rounded-lg border border-indigo-100 w-fit"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>${row['Tipo de solicitud'] || 'General'}</span>`;
                 }
 
                 const fechaStr = row['Marca temporal'] ? row['Marca temporal'].split(' ')[0] : '-';
+                const horaStr = row['Marca temporal'] && row['Marca temporal'].includes(' ') ? row['Marca temporal'].split(' ')[1] : '';
+                const usuario = row['Dirección de correo electrónico'] ? row['Dirección de correo electrónico'].split('@')[0] : 'Anónimo';
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/50 transition duration-150";
+                tr.className = "hover:bg-indigo-50/40 transition duration-150 group";
                 tr.innerHTML = `
-                    <td class="p-3.5 text-slate-400 whitespace-nowrap font-mono text-xs">${fechaStr}</td>
-                    <td class="p-3.5 font-medium text-slate-200">${row['Área / Sector'] || '-'}</td>
-                    <td class="p-3.5 text-slate-300">${row['Categoría del problema'] || '-'}</td>
-                    <td class="p-3.5">${tipoBadge}</td>
-                    <td class="p-3.5">${prioBadge}</td>
-                    <td class="p-3.5 text-slate-300 max-w-md truncate" title="${row['Descripción del problema o solicitud']}">${row['Descripción del problema o solicitud'] || '-'}</td>
-                `;
+                    <td class="p-4 text-slate-500 whitespace-nowrap font-mono text-xs">
+                        <div class="font-bold text-slate-700">${fechaStr}</div>
+                        <div class="text-[10px] text-slate-400">${horaStr}</div>
+                    </td>
+                    <td class="p-4 font-semibold text-slate-800">${usuario}<div class="text-[11px] font-normal text-slate-400">${row['Dirección de correo electrónico'] || ''}</div></td>
+                    <td class="p-4 font-bold text-slate-700">${row['Área / Sector'] || '-'}</td>
+                    <td class="p-4 text-slate-600 font-medium">${row['Categoría del problema'] || '-'}</td>
+                    <td class="p-4">${tipoBadge}</td>
+                    <td class="p-4 text-center">${prioBadge}</td>
+                    <td class="p-4 text-slate-600 max-w-md">
+                        <p class="line-clamp-2 group-hover:line-clamp-none transition-all duration-200 bg-slate-50 group-hover:bg-white p-2 rounded-lg border border-slate-100 group-hover:border-slate-200 group-hover:shadow-sm" title="${row['Descripción del problema o solicitud']}">${row['Descripción del problema o solicitud'] || '-'}</p>
+                    </td>
+                </td>`;
                 tableBody.appendChild(tr);
             });
         }
 
-        // Cargar datos al iniciar la página
         window.addEventListener('DOMContentLoaded', fetchData);
     </script>
 </body>
