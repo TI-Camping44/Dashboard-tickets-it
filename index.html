@@ -135,7 +135,7 @@
 
             <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow">
                 <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                     Estatus de Planillas / Informes Automatizados
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -238,7 +238,6 @@
 
         <div class="xl:col-span-1 space-y-6">
             <aside class="bg-amber-50 border border-amber-200 p-5 rounded-2xl card-shadow space-y-4">
-                
                 <div class="flex items-start gap-3 pb-3 border-b border-amber-200">
                     <div class="p-2 bg-amber-500 text-white rounded-xl animate-pulse">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
@@ -263,12 +262,12 @@
                 <div class="text-xs text-amber-900 space-y-3 font-medium leading-relaxed">
                     <div class="bg-white/60 p-3 rounded-xl border border-amber-200/50">
                         <p class="font-bold text-amber-950">🚨 Diagnóstico de Falla:</p>
-                        <p class="mt-1 text-slate-700 font-normal">Posterior a tormenta eléctrica y corto circuito, se produjo una falla física crítica en los 3 discos rígidos del servidor principal (RAID afectado), perdiendo el acceso al archivo original <code class="bg-amber-100 px-1 py-0.5 rounded text-rose-700 font-mono text-[11px]">Hansa.hdb</code>.</p>
+                        <p class="mt-1 text-slate-700 font-normal">Falla física crítica en los 3 discos rígidos del servidor principal (RAID afectado), perdiendo el acceso al archivo original <code class="bg-amber-100 px-1 py-0.5 rounded text-rose-700 font-mono text-[11px]">Hansa.hdb</code>.</p>
                     </div>
 
                     <div class="bg-white/60 p-3 rounded-xl border border-amber-200/50">
                         <p class="font-bold text-amber-950">📦 Diagnóstico de Copias de Seguridad:</p>
-                        <p class="mt-1 text-slate-700 font-normal">Los respaldos alojados en el <span class="font-semibold text-slate-900">LACIE-NAS</span> (Backups del 06/05/2026 de 29GB y 31GB) arrojan error de <span class="text-rose-600 font-bold">"INCOMPLETE BACKUP DETECTED"</span> al importarse. Se determinó que el script de compresión copiaba los archivos antes de finalizar su procesamiento.</p>
+                        <p class="mt-1 text-slate-700 font-normal">Los respaldos alojados en el <span class="font-semibold text-slate-900">LACIE-NAS</span> arrojan error de <span class="text-rose-600 font-bold">"INCOMPLETE BACKUP DETECTED"</span> al importarse.</p>
                     </div>
 
                     <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-xl space-y-2">
@@ -279,7 +278,7 @@
                         <div class="text-[11px] text-indigo-900 font-normal space-y-1">
                             <p><span class="font-bold text-indigo-950">Dispositivos:</span> 3x Planet First MZ-IES800D</p>
                             <p><span class="font-bold text-indigo-950">Estado actual:</span> <span class="text-indigo-700 font-bold bg-indigo-100 border border-indigo-200 px-1.5 py-0.5 rounded text-[10px]">EN PROCESO CRÍTICO</span></p>
-                            <p class="bg-white/80 p-2 rounded border border-indigo-100 text-slate-600 text-[11px] italic mt-1.5">"Daño en la controladora electrónica. Técnicos trabajando para forzar el acceso físico al área de datos. Aún sin acceso; una vez logrado, se procederá al espejado." — Técnico Juan Pablo.</p>
+                            <p class="bg-white/80 p-2 rounded border border-indigo-100 text-slate-600 text-[11px] italic mt-1.5">"Daño en la controladora electrónica. Técnicos trabajando para forzar el acceso físico al área de datos." — Técnico Juan Pablo.</p>
                             <p class="text-[10px] font-bold text-indigo-950 mt-1">🗓️ Fecha Est. Finalización: 07/07/2026</p>
                         </div>
                     </div>
@@ -301,8 +300,6 @@
         function fetchData() {
             const statusEl = document.getElementById('status');
             statusEl.innerHTML = `Sincronizando...`;
-            statusEl.className = "bg-amber-50 text-amber-700 border border-amber-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
-
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
                 download: true,
                 header: true,
@@ -313,7 +310,6 @@
                     populateDropdowns(allData);
                     applyFilters();
                     statusEl.innerHTML = `Conectado en vivo`;
-                    statusEl.className = "bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm";
                 }
             });
         }
@@ -344,8 +340,6 @@
 
             const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
             fillSelect('filter-category', cats, '📂 Todas');
-            
-            // YA NO SE LLENAN LOS ESTADOS AUTOMÁTICAMENTE, SE DEJARON FIJOS COMO PENDIENTE Y RESUELTO EN EL HTML
         }
 
         function fillSelect(id, list, defText) {
@@ -383,10 +377,10 @@
             applyFilters();
         }
 
-        // FUNCIÓN BINARIA ESTRICTA: Solo es "Resuelto" si dice literalmente Resuelto, Finalizado o Cerrado.
+        // 🛠️ PARSEO TRIPLE: Forzamos la lectura estricta sobre la columna "ESTADO" en mayúsculas
         function getBinaryStatus(row) {
-            const st = (row['Estado'] || row['Status'] || '').toString().toLowerCase().trim();
-            if (st.includes('resuelt') || st.includes('fin') || st.includes('cerrad') || st === 'resuelto' || st === 'finalizado') {
+            const st = (row['ESTADO'] || row['Estado'] || row['Status'] || '').toString().toLowerCase().trim();
+            if (st.includes('resuelt') || st.includes('fin') || st.includes('cerrad')) {
                 return 'Resuelto';
             }
             return 'Pendiente';
@@ -437,7 +431,6 @@
             document.getElementById('kpi-total').innerText = data.length;
             document.getElementById('kpi-high').innerText = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
             
-            // Conteo binario estricto
             const pend = data.filter(r => getBinaryStatus(r) === 'Pendiente').length;
             const res = data.filter(r => getBinaryStatus(r) === 'Resuelto').length;
 
@@ -518,7 +511,6 @@
                 if (row['Prioridad'] === 'Alta') pBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-200">Alta</span>';
                 if (row['Prioridad'] === 'Media') pBadge = '<span class="bg-sky-100 text-sky-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-200">Media</span>';
 
-                // Lógica visual estricta para el ESTADO BINARIO
                 const stText = getBinaryStatus(row);
                 let stBadge = `<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pendiente</span>`;
                 if(stText === 'Resuelto') {
