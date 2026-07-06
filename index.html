@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard IT | TICKETS INTERNOS</title>
+    <title>Portal IT | TICKETS INTERNOS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Tickets IT</h1>
-                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard IT • Camping 44</p>
+                    <p class="text-slate-500 text-xs sm:text-sm font-medium">Dashboard Analítico IT • Camping 44</p>
                 </div>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
@@ -50,7 +50,7 @@
                     Actualizar
                 </button>
                 <div id="status" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm">
-                    Conectado en vivo
+                    Conectado
                 </div>
             </div>
         </div>
@@ -71,20 +71,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Palabra clave</label>
-                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 transition">
+                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 transition">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Año</label>
-                        <select id="filter-year" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                        <select id="filter-year" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">📅 Todos</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Mes</label>
-                        <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                        <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">🗓️ Todos</option>
                             <option value="1">Enero</option>
                             <option value="2">Febrero</option>
@@ -101,20 +101,26 @@
                         </select>
                     </div>
                     <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Estado</label>
+                        <select id="filter-status" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">📌 Todos</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Área / Sector</label>
-                        <select id="filter-area" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                        <select id="filter-area" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">🏢 Todas</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Categoría</label>
-                        <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                        <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">📂 Todas</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Prioridad</label>
-                        <select id="filter-priority" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                        <select id="filter-priority" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">⚡ Todas</option>
                             <option value="Crítica">🚨 Crítica</option>
                             <option value="Alta">🔴 Alta</option>
@@ -134,12 +140,12 @@
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Críticos o Altos</p>
                     <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-600 mt-1">0</h2>
                 </div>
-                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow border-l-4 border-l-amber-500">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Incidentes</p>
+                <div onclick="filterByStatusQuick('Pendiente')" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-amber-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pendientes / Abiertos</p>
                     <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-600 mt-1">0</h2>
                 </div>
-                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow border-l-4 border-l-emerald-500">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Solicitudes Nuevas</p>
+                <div onclick="filterByStatusQuick('Finalizado')" class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-emerald-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Finalizados / Resueltos</p>
                     <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h2>
                 </div>
             </section>
@@ -167,6 +173,7 @@
                                 <th class="p-3">Usuario</th>
                                 <th class="p-3">Área</th>
                                 <th class="p-3">Categoría</th>
+                                <th class="p-3 text-center">Estado</th>
                                 <th class="p-3 text-center">Prioridad</th>
                                 <th class="p-3 min-w-[250px]">Descripción</th>
                             </tr>
@@ -285,6 +292,10 @@
 
             const cats = [...new Set(data.map(r => r['Categoría del problema'] || 'Otro'))].filter(Boolean).sort();
             fillSelect('filter-category', cats, '📂 Todas');
+
+            // Poblar filtro de Estados (Si no existe la columna en el Sheets, por defecto pondrá Pendiente/Finalizado)
+            const stats = [...new Set(data.map(r => r['Estado'] || r['Status'] || 'Pendiente'))].filter(Boolean).sort();
+            fillSelect('filter-status', stats, '📌 Todos');
         }
 
         function fillSelect(id, list, defText) {
@@ -303,6 +314,7 @@
             document.getElementById('filter-search').value = '';
             document.getElementById('filter-year').value = 'ALL';
             document.getElementById('filter-month').value = 'ALL';
+            document.getElementById('filter-status').value = 'ALL';
             document.getElementById('filter-area').value = 'ALL';
             document.getElementById('filter-category').value = 'ALL';
             document.getElementById('filter-priority').value = 'ALL';
@@ -315,20 +327,34 @@
             applyFilters();
         }
 
+        function filterByStatusQuick(keyword) {
+            resetAllFilters();
+            const select = document.getElementById('filter-status');
+            for(let i=0; i<select.options.length; i++) {
+                if(select.options[i].value.toLowerCase().includes(keyword.toLowerCase())) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+            applyFilters();
+        }
+
         function applyFilters() {
             const sVal = document.getElementById('filter-search').value.toLowerCase().trim();
             const yVal = document.getElementById('filter-year').value;
             const mVal = document.getElementById('filter-month').value;
+            const stVal = document.getElementById('filter-status').value;
             const aVal = document.getElementById('filter-area').value;
             const cVal = document.getElementById('filter-category').value;
             const pVal = document.getElementById('filter-priority').value;
 
-            const hasF = sVal!=='' || yVal!=='ALL' || mVal!=='ALL' || aVal!=='ALL' || cVal!=='ALL' || pVal!=='ALL';
+            const hasF = sVal!=='' || yVal!=='ALL' || mVal!=='ALL' || stVal!=='ALL' || aVal!=='ALL' || cVal!=='ALL' || pVal!=='ALL';
             document.getElementById('btn-reset').className = hasF ? "flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm" : "hidden";
 
             const filtered = allData.filter(row => {
                 const desc = (row['Descripción del problema o solicitud'] || '').toLowerCase();
                 const mail = (row['Dirección de correo electrónico'] || '').toLowerCase();
+                const rStatus = row['Estado'] || row['Status'] || 'Pendiente';
                 
                 // Procesar fechas de la marca temporal
                 const datePart = row['Marca temporal']?.split(' ')[0] || '';
@@ -339,11 +365,12 @@
                 const mS = sVal === '' || desc.includes(sVal) || mail.includes(sVal);
                 const mY = yVal === 'ALL' || rYear === yVal;
                 const mM = mVal === 'ALL' || rMonth === mVal;
+                const mSt = stVal === 'ALL' || rStatus === stVal;
                 const mA = aVal === 'ALL' || row['Área / Sector'] === aVal;
                 const mC = cVal === 'ALL' || row['Categoría del problema'] === cVal;
                 const mP = pVal === 'ALL' || row['Prioridad'] === pVal;
 
-                return mS && mY && mM && mA && mC && mP;
+                return mS && mY && mM && mSt && mA && mC && mP;
             });
 
             document.getElementById('total-count').innerText = allData.length;
@@ -357,8 +384,19 @@
         function renderKPIs(data) {
             document.getElementById('kpi-total').innerText = data.length;
             document.getElementById('kpi-high').innerText = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
-            document.getElementById('kpi-incidents').innerText = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('incidente')).length;
-            document.getElementById('kpi-requests').innerText = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('solicitud')).length;
+            
+            // Si en tu hoja no tienes columna "Estado", se asumirá que la mayoría están Pendientes/En Proceso para ilustrar
+            const pend = data.filter(r => {
+                const st = (r['Estado'] || r['Status'] || 'Pendiente').toLowerCase();
+                return st.includes('pend') || st.includes('abierto') || st.includes('proceso') || st.includes('inici');
+            }).length;
+            const fin = data.filter(r => {
+                const st = (r['Estado'] || r['Status'] || '').toLowerCase();
+                return st.includes('fin') || st.includes('resuelt') || st.includes('cerrad') || st.includes('listo');
+            }).length;
+
+            document.getElementById('kpi-incidents').innerText = pend;
+            document.getElementById('kpi-requests').innerText = fin;
         }
 
         function renderCharts(data) {
@@ -424,7 +462,7 @@
             const sorted = [...data].reverse();
 
             if (sorted.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 bg-slate-50/50 font-medium">🔍 Sin resultados.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 bg-slate-50/50 font-medium">🔍 Sin resultados.</td></tr>`;
                 return;
             }
 
@@ -433,6 +471,13 @@
                 if (row['Prioridad'] === 'Crítica') pBadge = '<span class="bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full text-xs font-extrabold flex items-center gap-1 w-fit border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>Crítica</span>';
                 if (row['Prioridad'] === 'Alta') pBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-200">Alta</span>';
                 if (row['Prioridad'] === 'Media') pBadge = '<span class="bg-sky-100 text-sky-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-200">Media</span>';
+
+                // Lógica visual del ESTADO
+                const stText = row['Estado'] || row['Status'] || 'Pendiente';
+                let stBadge = `<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>${stText}</span>`;
+                if(stText.toLowerCase().includes('fin') || stText.toLowerCase().includes('resuelt') || stText.toLowerCase().includes('cerrad')) {
+                    stBadge = `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>${stText}</span>`;
+                }
 
                 const fStr = row['Marca temporal'] ? row['Marca temporal'].split(' ')[0] : '-';
                 const uStr = row['Dirección de correo electrónico'] ? row['Dirección de correo electrónico'].split('@')[0] : 'Anónimo';
@@ -444,6 +489,7 @@
                     <td class="p-3 font-semibold text-slate-800">${uStr}</td>
                     <td class="p-3 font-bold text-slate-700">${row['Área / Sector'] || '-'}</td>
                     <td class="p-3 text-slate-600 font-medium">${row['Categoría del problema'] || '-'}</td>
+                    <td class="p-3 text-center">${stBadge}</td>
                     <td class="p-3 flex justify-center">${pBadge}</td>
                     <td class="p-3 text-slate-600 max-w-sm truncate" title="${row['Descripción del problema o solicitud']}">${row['Descripción del problema o solicitud'] || '-'}</td>
                 `;
