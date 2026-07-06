@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Tickets IT | GitHub Pages</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos interactivos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PapaParse para conectar con Google Sheets CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        /* Scrollbar personalizado para la tabla */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+
+    <!-- Navbar / Encabezado -->
+    <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-indigo-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Dashboard de Mesa de Ayuda (IT)</h1>
+                <p class="text-slate-400 text-sm mt-0.5">Monitoreo en tiempo real sincronizado desde Google Sheets</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+            <button onclick="fetchData()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 text-xs transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Actualizar
+            </button>
+            <div id="status" class="flex items-center gap-2 bg-emerald-950/60 text-emerald-400 border border-emerald-800/80 px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Conectado en vivo
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Barra de Filtros -->
+        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl mb-8 flex flex-wrap items-center gap-4 justify-between">
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Filtros:</span>
+                <select id="filter-area" onchange="applyFilters()" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500">
+                    <option value="ALL">Todas las Áreas</option>
+                </select>
+                <select id="filter-priority" onchange="applyFilters()" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500">
+                    <option value="ALL">Todas las Prioridades</option>
+                    <option value="Crítica">Crítica</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+            <div class="text-xs text-slate-400">
+                Mostrando: <span id="displayed-count" class="font-bold text-white">0</span> de <span id="total-count" class="font-bold text-white">0</span> tickets
+            </div>
+        </div>
+
+        <!-- Tarjetas KPI -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute right-3 top-3 bg-indigo-500/10 p-2 rounded-lg text-indigo-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                </div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tickets en Vista</p>
+                <h2 id="kpi-total" class="text-3xl font-extrabold text-white mt-2">0</h2>
+                <p class="text-xs text-slate-500 mt-2">Volumen de solicitudes</p>
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute right-3 top-3 bg-rose-500/10 p-2 rounded-lg text-rose-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Críticos o Altos</p>
+                <h2 id="kpi-high" class="text-3xl font-extrabold text-rose-500 mt-2">0</h2>
+                <p class="text-xs text-rose-400/80 mt-2">Requieren atención prioritaria</p>
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute right-3 top-3 bg-amber-500/10 p-2 rounded-lg text-amber-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Incidentes</p>
+                <h2 id="kpi-incidents" class="text-3xl font-extrabold text-amber-400 mt-2">0</h2>
+                <p class="text-xs text-slate-500 mt-2">Fallos de sistema / Hardware</p>
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute right-3 top-3 bg-emerald-500/10 p-2 rounded-lg text-emerald-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                </div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Solicitudes / Nuevos</p>
+                <h2 id="kpi-requests" class="text-3xl font-extrabold text-emerald-400 mt-2">0</h2>
+                <p class="text-xs text-slate-500 mt-2">Acceso, equipos, pautas</p>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Gráfico de Dona: Por Área -->
+            <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-semibold text-slate-200 mb-1">Tickets por Área / Sector</h3>
+                    <p class="text-xs text-slate-400 mb-4">Distribución del soporte solicitado</p>
+                </div>
+                <div class="h-64 relative flex items-center justify-center">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Barras: Por Categoría -->
+            <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl lg:col-span-2 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-semibold text-slate-200 mb-1">Categorías de Problemas</h3>
+                    <p class="text-xs text-slate-400 mb-4">Clasificación detallada de incidentes y requerimientos</p>
+                </div>
+                <div class="h-64 relative">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla Detallada -->
+        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 overflow-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-base font-semibold text-slate-200">Listado de Tickets Recientes</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Muestra los registros según los filtros seleccionados</p>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-950/80 text-slate-400 uppercase text-xs border-y border-slate-800 font-semibold">
+                        <tr>
+                            <th class="p-3.5">Fecha</th>
+                            <th class="p-3.5">Área / Sector</th>
+                            <th class="p-3.5">Categoría</th>
+                            <th class="p-3.5">Tipo</th>
+                            <th class="p-3.5">Prioridad</th>
+                            <th class="p-3.5 min-w-[250px]">Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tickets-table-body" class="divide-y divide-slate-800/60 text-xs md:text-sm">
+                        <!-- Generado por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA DE JAVASCRIPT -->
+    <script>
+        // URL Oficial conectada a tu Google Sheets
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22ggt7WrMMsyKg31ztolq1w2fW-S2uS-FfCwrm5E69za5TKcBZTgHImRN-GvchqjFXV4TBdxPhjRO/pub?gid=1194472761&single=true&output=csv';
+
+        let allData = [];
+        let areaChartInstance = null;
+        let categoryChartInstance = null;
+
+        // Configuración de estilo global para Chart.js
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        function fetchData() {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Sincronizando...`;
+            statusEl.className = "flex items-center gap-2 bg-amber-950/60 text-amber-400 border border-amber-800/80 px-3 py-1.5 rounded-full text-xs font-medium";
+
+            Papa.parse(GOOGLE_SHEET_CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    allData = results.data.filter(row => row['Marca temporal']); // Ignorar filas sin fecha
+                    populateAreaFilter(allData);
+                    applyFilters();
+                    statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Conectado en vivo`;
+                    statusEl.className = "flex items-center gap-2 bg-emerald-950/60 text-emerald-400 border border-emerald-800/80 px-3 py-1.5 rounded-full text-xs font-medium shadow-sm";
+                },
+                error: function(err) {
+                    console.error("Error cargando CSV:", err);
+                    statusEl.innerHTML = `⚠️ Error de Lectura`;
+                    statusEl.className = "flex items-center gap-2 bg-rose-950/60 text-rose-400 border border-rose-800/80 px-3 py-1.5 rounded-full text-xs font-medium";
+                }
+            });
+        }
+
+        function populateAreaFilter(data) {
+            const filterArea = document.getElementById('filter-area');
+            const currentVal = filterArea.value;
+            const areas = [...new Set(data.map(r => r['Área / Sector'] || 'Sin Asignar'))].filter(Boolean);
+            
+            filterArea.innerHTML = '<option value="ALL">Todas las Áreas</option>';
+            areas.sort().forEach(area => {
+                const opt = document.createElement('option');
+                opt.value = area;
+                opt.textContent = area;
+                filterArea.appendChild(opt);
+            });
+            filterArea.value = currentVal;
+        }
+
+        function applyFilters() {
+            const areaVal = document.getElementById('filter-area').value;
+            const prioVal = document.getElementById('filter-priority').value;
+
+            const filtered = allData.filter(row => {
+                const matchArea = (areaVal === 'ALL') || (row['Área / Sector'] === areaVal);
+                const matchPrio = (prioVal === 'ALL') || (row['Prioridad'] === prioVal);
+                return matchArea && matchPrio;
+            });
+
+            document.getElementById('total-count').innerText = allData.length;
+            document.getElementById('displayed-count').innerText = filtered.length;
+
+            renderKPIs(filtered);
+            renderCharts(filtered);
+            renderTable(filtered);
+        }
+
+        function renderKPIs(data) {
+            document.getElementById('kpi-total').innerText = data.length;
+            
+            const high = data.filter(r => r['Prioridad'] === 'Crítica' || r['Prioridad'] === 'Alta').length;
+            document.getElementById('kpi-high').innerText = high;
+
+            const incidents = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('incidente')).length;
+            document.getElementById('kpi-incidents').innerText = incidents;
+
+            const requests = data.filter(r => (r['Tipo de solicitud'] || '').toLowerCase().includes('solicitud')).length;
+            document.getElementById('kpi-requests').innerText = requests;
+        }
+
+        function renderCharts(data) {
+            // 1. Datos para Gráfico de Áreas
+            const areaCounts = {};
+            const catCounts = {};
+
+            data.forEach(row => {
+                const area = row['Área / Sector'] || 'Sin Asignar';
+                const cat = row['Categoría del problema'] || 'Otro';
+                areaCounts[area] = (areaCounts[area] || 0) + 1;
+                catCounts[cat] = (catCounts[cat] || 0) + 1;
+            });
+
+            // Colores modernos de Tailwind
+            const colors = ['#6366f1', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#14b8a6'];
+
+            // Render Gráfico de Área (Dona)
+            const areaCtx = document.getElementById('areaChart').getContext('2d');
+            if (areaChartInstance) areaChartInstance.destroy();
+            areaChartInstance = new Chart(areaCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(areaCounts),
+                    datasets: [{
+                        data: Object.values(areaCounts),
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#0f172a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 15, font: { size: 11 } } }
+                    },
+                    cutout: '68%'
+                }
+            });
+
+            // Render Gráfico de Categoría (Barras horizontales o verticales)
+            const catCtx = document.getElementById('categoryChart').getContext('2d');
+            if (categoryChartInstance) categoryChartInstance.destroy();
+            categoryChartInstance = new Chart(catCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(catCounts),
+                    datasets: [{
+                        label: 'Incidencias',
+                        data: Object.values(catCounts),
+                        backgroundColor: '#6366f1',
+                        hoverBackgroundColor: '#818cf8',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            ticks: { stepSize: 1, font: { size: 11 } },
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('tickets-table-body');
+            tableBody.innerHTML = '';
+
+            // Mostrar ordenados por más recientes (asumiendo que las últimas filas del sheets son más nuevas)
+            const sorted = [...data].reverse();
+
+            if (sorted.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No se encontraron tickets con los filtros actuales.</td></tr>`;
+                return;
+            }
+
+            sorted.forEach(row => {
+                let prioBadge = '<span class="bg-slate-800 text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium border border-slate-700">Normal</span>';
+                if (row['Prioridad'] === 'Crítica') prioBadge = '<span class="bg-rose-950/80 text-rose-400 border border-rose-800 px-2.5 py-1 rounded-md text-xs font-bold animate-pulse">Crítica</span>';
+                if (row['Prioridad'] === 'Alta') prioBadge = '<span class="bg-amber-950/80 text-amber-400 border border-amber-800/80 px-2.5 py-1 rounded-md text-xs font-semibold">Alta</span>';
+                if (row['Prioridad'] === 'Media') prioBadge = '<span class="bg-sky-950/80 text-sky-400 border border-sky-800/80 px-2.5 py-1 rounded-md text-xs font-medium">Media</span>';
+
+                let tipoBadge = row['Tipo de solicitud'] || '-';
+                if (tipoBadge.toLowerCase().includes('incidente')) {
+                    tipoBadge = `<span class="text-rose-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>${row['Tipo de solicitud']}</span>`;
+                } else {
+                    tipoBadge = `<span class="text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>${row['Tipo de solicitud'] || 'General'}</span>`;
+                }
+
+                const fechaStr = row['Marca temporal'] ? row['Marca temporal'].split(' ')[0] : '-';
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition duration-150";
+                tr.innerHTML = `
+                    <td class="p-3.5 text-slate-400 whitespace-nowrap font-mono text-xs">${fechaStr}</td>
+                    <td class="p-3.5 font-medium text-slate-200">${row['Área / Sector'] || '-'}</td>
+                    <td class="p-3.5 text-slate-300">${row['Categoría del problema'] || '-'}</td>
+                    <td class="p-3.5">${tipoBadge}</td>
+                    <td class="p-3.5">${prioBadge}</td>
+                    <td class="p-3.5 text-slate-300 max-w-md truncate" title="${row['Descripción del problema o solicitud']}">${row['Descripción del problema o solicitud'] || '-'}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Cargar datos al iniciar la página
+        window.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>
