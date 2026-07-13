@@ -278,8 +278,8 @@
                         <div class="text-[11px] text-indigo-900 font-normal space-y-1">
                             <p><span class="font-bold text-indigo-950">Dispositivos:</span> 3x Planet First MZ-IES800D</p>
                             <p><span class="font-bold text-indigo-950">Estado actual:</span> <span class="text-indigo-700 font-bold bg-indigo-100 border border-indigo-200 px-1.5 py-0.5 rounded text-[10px]">EN PROCESO CRÍTICO</span></p>
-                            <p class="bg-white/80 p-2 rounded border border-indigo-100 text-slate-600 text-[11px] italic mt-1.5">"Daño en la controladora electrónica. Técnicos trabajando para forzar el acceso físico al área de datos." — Técnico Juan Pablo.</p>
-                            <p class="text-[10px] font-bold text-indigo-950 mt-1">🗓️ Fecha Est. Finalización: 07/07/2026</p>
+                            <p class="bg-white/80 p-2 rounded border border-indigo-100 text-slate-600 text-[11px] italic mt-1.5">"Conseguimos acceder en un proceso de clonado a solo 1 de los 3 discos. Los otros 2 presentan problemas en el controlador y chips NAND Flash. Realizando pruebas de compatibilidad (7 días más). Es necesario acceder a los 3 ya que es sistema RAID." — Juan Pablo / NicolasG (07/07/2026)</p>
+                            <p class="text-[10px] font-bold text-indigo-950 mt-1">🗓️ Fecha Est. Finalización: 16/07/2026</p>
                         </div>
                     </div>
                 </div>
@@ -377,7 +377,6 @@
             applyFilters();
         }
 
-        // 🛠️ PARSEO TRIPLE: Forzamos la lectura estricta sobre la columna "ESTADO" en mayúsculas
         function getBinaryStatus(row) {
             const st = (row['ESTADO'] || row['Estado'] || row['Status'] || '').toString().toLowerCase().trim();
             if (st.includes('resuelt') || st.includes('fin') || st.includes('cerrad')) {
