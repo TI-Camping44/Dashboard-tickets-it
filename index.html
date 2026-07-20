@@ -21,16 +21,9 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-        }
-        .card-shadow-hover:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
-        }
-        :focus-visible {
-            outline: 2px solid #4f46e5;
-            outline-offset: 2px;
-        }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,.03), 0 2px 4px -2px rgba(0,0,0,.03); }
+        .card-shadow-hover:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,.05), 0 4px 6px -4px rgba(0,0,0,.03); }
+        :focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
         }
@@ -79,10 +72,10 @@
                         Mostrando <span id="displayed-count" class="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">0</span> de <span id="total-count" class="font-bold text-slate-700">0</span> tickets
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                     <div>
                         <label for="filter-search" class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Palabra clave</label>
-                        <input type="text" id="filter-search" oninput="onSearchInput()" placeholder="Buscar…" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 transition">
+                        <input type="text" id="filter-search" oninput="onSearchInput()" placeholder="Texto, N° de ticket, usuario…" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 transition">
                     </div>
                     <div>
                         <label for="filter-year" class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Año</label>
@@ -94,28 +87,28 @@
                         <label for="filter-month" class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Mes</label>
                         <select id="filter-month" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">Todos</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
+                            <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+                            <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+                            <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+                            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
                         </select>
                     </div>
                     <div>
                         <label for="filter-status" class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Estado</label>
                         <select id="filter-status" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
                             <option value="ALL">Todos</option>
-                            <option value="ABIERTOS">Abiertos (no resueltos)</option>
-                            <option value="Pendiente">Pendiente</option>
+                            <option value="ABIERTOS">Abiertos (sin cerrar)</option>
+                            <option value="Nuevo">Nuevo</option>
                             <option value="En proceso">En proceso</option>
+                            <option value="En espera">En espera</option>
                             <option value="Resuelto">Resuelto</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-type" class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tipo</label>
+                        <select id="filter-type" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:bg-white focus:border-indigo-500 font-medium transition cursor-pointer">
+                            <option value="ALL">Todos</option>
                         </select>
                     </div>
                     <div>
@@ -139,6 +132,7 @@
                             <option value="Alta">Alta</option>
                             <option value="Media">Media</option>
                             <option value="Baja">Baja</option>
+                            <option value="SIN">Sin prioridad</option>
                         </select>
                     </div>
                 </div>
@@ -157,21 +151,30 @@
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Abiertos</p>
                     <span id="kpi-pending" class="block text-3xl font-extrabold text-amber-600 mt-1">0</span>
                 </button>
-                <button type="button" onclick="filterByStatusQuick('Resuelto')" class="text-left bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-emerald-500">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Resueltos</p>
+                <button type="button" onclick="filterByStatusQuick('CERRADOS')" class="text-left bg-white border border-slate-200 p-5 rounded-2xl card-shadow card-shadow-hover transition cursor-pointer border-l-4 border-l-emerald-500">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Cerrados</p>
                     <span id="kpi-resolved" class="block text-3xl font-extrabold text-emerald-600 mt-1">0</span>
                 </button>
             </section>
 
-            <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ticket abierto más antiguo</p>
-                    <p id="kpi-oldest" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
-                    <p id="kpi-oldest-detail" class="text-[11px] text-slate-500 font-medium mt-0.5">Sin datos</p>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tiempo medio de resolución</p>
+                    <p id="kpi-mttr" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
+                    <p id="kpi-mttr-detail" class="text-[11px] text-slate-500 font-medium mt-0.5">—</p>
                 </div>
-             
                 <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tasa de resolución</p>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mediana de resolución</p>
+                    <p id="kpi-median" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
+                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Menos sensible a los casos extremos</p>
+                </div>
+                <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Abierto más antiguo</p>
+                    <p id="kpi-oldest" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
+                    <p id="kpi-oldest-detail" class="text-[11px] text-slate-500 font-medium mt-0.5">—</p>
+                </div>
+                <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tasa de cierre</p>
                     <p id="kpi-rate" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
                     <p id="kpi-rate-detail" class="text-[11px] text-slate-500 font-medium mt-0.5">Sobre los tickets en vista</p>
                 </div>
@@ -188,6 +191,11 @@
                 </div>
             </section>
 
+            <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow h-[320px] flex flex-col justify-between">
+                <h3 class="text-sm font-bold text-slate-800">Tickets abiertos vs. cerrados por mes</h3>
+                <div class="h-56 relative"><canvas id="monthChart"></canvas></div>
+            </section>
+
             <section class="bg-white border border-slate-200 rounded-2xl card-shadow overflow-hidden">
                 <div class="p-4 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
                     <h3 class="text-sm font-bold text-slate-800">Historial de tickets</h3>
@@ -201,18 +209,27 @@
                     <table class="w-full text-left text-sm text-slate-600">
                         <thead class="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
                             <tr>
+                                <th scope="col" class="p-3">Ticket</th>
                                 <th scope="col" class="p-3">Fecha</th>
                                 <th scope="col" class="p-3">Usuario</th>
                                 <th scope="col" class="p-3">Área</th>
+                                <th scope="col" class="p-3">Tipo</th>
                                 <th scope="col" class="p-3">Categoría</th>
                                 <th scope="col" class="p-3 text-center">Estado</th>
                                 <th scope="col" class="p-3 text-center">Prioridad</th>
-                                <th scope="col" class="p-3 min-w-[250px]">Descripción</th>
+                                <th scope="col" class="p-3 text-center">Días</th>
+                                <th scope="col" class="p-3 min-w-[240px]">Descripción</th>
                             </tr>
                         </thead>
                         <tbody id="tickets-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm"></tbody>
                     </table>
                 </div>
+            </section>
+
+            <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow">
+                <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Higiene de la planilla</h3>
+                <p class="text-[11px] text-slate-500 font-medium mb-3">Revisado sobre los <span id="hyg-total">0</span> registros cargados, sin importar los filtros.</p>
+                <div id="hygiene-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs"></div>
             </section>
 
             <section class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow">
@@ -335,25 +352,22 @@
         'use strict';
 
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT22ggt7WrMMsyKg31ztolq1w2fW-S2uS-FfCwrm5E69za5TKcBZTgHImRN-GvchqjFXV4TBdxPhjRO/pub?gid=1194472761&single=true&output=csv';
-        const REFRESH_MS = 120000;   // auto-actualización cada 2 minutos
+        const REFRESH_MS = 120000;
         const PAGE_SIZE = 25;
-        const PALETTE = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#64748b', '#ef4444', '#14b8a6', '#a3620b'];
+        const PALETTE = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#64748b', '#ef4444', '#14b8a6', '#a16207'];
+        const CLOSED = ['Resuelto', 'Cerrado'];
 
-        let allData = [];
-        let filteredData = [];
-        let currentPage = 1;
-        let areaChart = null;
-        let categoryChart = null;
-        let searchTimer = null;
-        let COLS = {};
+        let allData = [], filteredData = [], currentPage = 1;
+        let areaChart = null, categoryChart = null, monthChart = null;
+        let searchTimer = null, COLS = {};
 
         Chart.defaults.color = '#64748b';
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
 
         /* ---------- utilidades ---------- */
 
-        function escapeHtml(value) {
-            return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+        function escapeHtml(v) {
+            return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
                 return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
             });
         }
@@ -366,36 +380,44 @@
             const list = fields || [];
             const find = function (re) { return list.find(function (f) { return re.test(deaccent(f)); }); };
             COLS = {
-                ts:       find(/marca temporal|timestamp|fecha de envio/) || 'Marca temporal',
+                ts:       find(/marca temporal|timestamp/) || 'Marca temporal',
                 email:    find(/correo|e-?mail/),
                 area:     find(/area|sector/),
+                type:     find(/tipo de solicitud|tipo/),
                 cat:      find(/categor/),
                 prio:     find(/prioridad/),
-                desc:     find(/descripcion|detalle|solicitud/),
-                status:   find(/^estado|status|situacion/),
-                resolved: find(/fecha.*(resol|cierre|solucion|finaliz)|resuelto el|cerrado el/)
+                desc:     find(/descripcion|detalle del problema/),
+                attach:   find(/adjunt|archivo/),
+                impact:   find(/impacto/),
+                ticket:   find(/ticket/),
+                status:   find(/^estado/),
+                owner:    find(/responsable/),
+                start:    find(/fecha.*inicio/),
+                closed:   find(/fecha.*(cierr|resol|solucion|finaliz)/)
             };
         }
 
-        // Detecta si las fechas vienen DD/MM/YYYY o MM/DD/YYYY mirando todo el set.
+        // Detecta DD/MM vs MM/DD mirando todas las fechas del set.
         function detectDateOrder(rows) {
             let firstOver12 = false, secondOver12 = false;
-            rows.forEach(function (r) {
-                const p = String(r[COLS.ts] || '').trim().split(' ')[0].split(/[\/\-]/);
+            const check = function (value) {
+                const p = String(value || '').trim().split(' ')[0].split(/[\/\-]/);
                 if (p.length < 3) return;
-                const a = parseInt(p[0], 10), b = parseInt(p[1], 10);
-                if (a > 12) firstOver12 = true;
-                if (b > 12) secondOver12 = true;
+                if (parseInt(p[0], 10) > 12) firstOver12 = true;
+                if (parseInt(p[1], 10) > 12) secondOver12 = true;
+            };
+            rows.forEach(function (r) {
+                check(r[COLS.ts]);
+                if (COLS.start) check(r[COLS.start]);
+                if (COLS.closed) check(r[COLS.closed]);
             });
-            if (secondOver12 && !firstOver12) return 'MDY';
-            return 'DMY';
+            return (secondOver12 && !firstOver12) ? 'MDY' : 'DMY';
         }
 
         function parseDate(str, order) {
             if (!str) return null;
             const s = String(str).trim();
-            // ISO
-            let m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+            let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
             if (m) return new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
             m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:[ ,]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
             if (!m) return null;
@@ -408,11 +430,16 @@
         }
 
         function normStatus(raw) {
-            const st = deaccent(raw);
-            if (/resuelt|finaliz|cerrad|solucionad|complet|listo/.test(st)) return 'Resuelto';
-            if (/proceso|curso|progres|espera|asignad|trabajand|analisis|revision/.test(st)) return 'En proceso';
-            return 'Pendiente';
+            const st = deaccent(raw).trim();
+            if (!st) return 'Nuevo';
+            if (/resuelt|solucionad|complet|listo/.test(st)) return 'Resuelto';
+            if (/cerrad|finaliz|anulad|descartad/.test(st)) return 'Cerrado';
+            if (/espera|pausad|bloquead/.test(st)) return 'En espera';
+            if (/proceso|curso|progres|asignad|trabajand|analisis|revision/.test(st)) return 'En proceso';
+            return 'Nuevo';
         }
+
+        function isClosed(t) { return CLOSED.indexOf(t.status) !== -1; }
 
         function fmtDate(d) {
             if (!d) return '-';
@@ -420,8 +447,18 @@
             return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
         }
 
-        function daysBetween(a, b) {
-            return Math.floor((b - a) / 86400000);
+        function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+
+        function median(nums) {
+            if (!nums.length) return null;
+            const s = nums.slice().sort(function (a, b) { return a - b; });
+            const mid = Math.floor(s.length / 2);
+            return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+        }
+
+        function safeUrl(u) {
+            const s = String(u || '').trim();
+            return /^https?:\/\//i.test(s) ? s : '';
         }
 
         /* ---------- carga ---------- */
@@ -429,9 +466,9 @@
         function setStatus(kind, text) {
             const el = document.getElementById('status');
             const styles = {
-                ok:      'bg-emerald-50 text-emerald-700 border-emerald-200',
+                ok: 'bg-emerald-50 text-emerald-700 border-emerald-200',
                 loading: 'bg-slate-100 text-slate-600 border-slate-200',
-                error:   'bg-rose-50 text-rose-700 border-rose-200'
+                error: 'bg-rose-50 text-rose-700 border-rose-200'
             };
             el.className = 'border px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm ' + styles[kind];
             el.textContent = text;
@@ -446,34 +483,52 @@
                 complete: function (results) {
                     try {
                         mapColumns(results.meta && results.meta.fields);
-                        const rows = results.data.filter(function (r) { return r[COLS.ts]; });
+                        const rows = results.data.filter(function (r) { return r[COLS.ts] || (COLS.ticket && r[COLS.ticket]); });
                         const order = detectDateOrder(rows);
 
                         allData = rows.map(function (r) {
-                            const d = parseDate(r[COLS.ts], order);
-                            const rd = COLS.resolved ? parseDate(r[COLS.resolved], order) : null;
+                            const created = parseDate(r[COLS.ts], order);
+                            const start = COLS.start ? parseDate(r[COLS.start], order) : null;
+                            const closedAt = COLS.closed ? parseDate(r[COLS.closed], order) : null;
+                            const opened = created || start;
                             const status = normStatus(r[COLS.status]);
+                            const desc = (r[COLS.desc] || '').trim();
                             return {
-                                raw: r,
-                                date: d,
-                                resolvedDate: rd,
+                                date: opened,
+                                startDate: start,
+                                closedDate: closedAt,
                                 status: status,
-                                area: r[COLS.area] || 'Sin asignar',
-                                cat: r[COLS.cat] || 'Otro',
-                                prio: r[COLS.prio] || '',
-                                desc: r[COLS.desc] || '',
+                                rawStatus: (r[COLS.status] || '').trim(),
+                                ticket: (COLS.ticket ? r[COLS.ticket] : '') || '',
+                                area: (r[COLS.area] || '').trim() || 'Sin asignar',
+                                type: (COLS.type ? r[COLS.type] : '') || 'Sin tipo',
+                                cat: (r[COLS.cat] || '').trim() || 'Otro',
+                                prio: (r[COLS.prio] || '').trim(),
+                                impact: (COLS.impact ? r[COLS.impact] : '') || '',
+                                owner: (COLS.owner ? r[COLS.owner] : '') || '',
+                                attach: safeUrl(COLS.attach ? r[COLS.attach] : ''),
+                                desc: desc,
                                 user: (r[COLS.email] || '').split('@')[0] || 'Anónimo',
-                                blob: deaccent([r[COLS.desc], r[COLS.email], r[COLS.area], r[COLS.cat], r[COLS.prio]].join(' '))
+                                blob: deaccent([r[COLS.ticket], desc, r[COLS.email], r[COLS.area], r[COLS.cat], r[COLS.prio], r[COLS.owner], r[COLS.type]].join(' '))
                             };
+                        });
+
+                        allData.forEach(function (t) {
+                            const base = t.date || t.startDate;
+                            if (isClosed(t) && base && t.closedDate && t.closedDate >= base) {
+                                t.resolutionDays = daysBetween(base, t.closedDate);
+                            } else {
+                                t.resolutionDays = null;
+                            }
                         });
 
                         allData.sort(function (a, b) {
                             return (b.date ? b.date.getTime() : 0) - (a.date ? a.date.getTime() : 0);
                         });
 
-                        buildYearOptions();
-                        buildLookupOptions();
+                        buildOptions();
                         applyFilters();
+                        renderHygiene();
 
                         const now = new Date();
                         setStatus('ok', 'Actualizado ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'));
@@ -487,21 +542,23 @@
                     setStatus('error', 'Sin conexión con la planilla');
                     if (!allData.length) {
                         document.getElementById('tickets-table-body').innerHTML =
-                            '<tr><td colspan="7" class="p-8 text-center text-rose-600 bg-rose-50/40 font-medium">No se pudo leer la planilla. Revisá que siga publicada y volvé a intentar.</td></tr>';
+                            '<tr><td colspan="10" class="p-8 text-center text-rose-600 bg-rose-50/40 font-medium">No se pudo leer la planilla. Revisá que siga publicada y volvé a intentar.</td></tr>';
                     }
                 }
             });
         }
 
-        function buildYearOptions() {
+        function uniq(key) {
+            return Array.from(new Set(allData.map(function (t) { return t[key]; }))).filter(Boolean).sort();
+        }
+
+        function buildOptions() {
             const years = new Set();
             allData.forEach(function (t) { if (t.date) years.add(t.date.getFullYear()); });
             fillSelect('filter-year', Array.from(years).sort(function (a, b) { return b - a; }).map(String), 'Todos');
-        }
-
-        function buildLookupOptions() {
-            fillSelect('filter-area', Array.from(new Set(allData.map(function (t) { return t.area; }))).sort(), 'Todas');
-            fillSelect('filter-category', Array.from(new Set(allData.map(function (t) { return t.cat; }))).sort(), 'Todas');
+            fillSelect('filter-type', uniq('type'), 'Todos');
+            fillSelect('filter-area', uniq('area'), 'Todas');
+            fillSelect('filter-category', uniq('cat'), 'Todas');
         }
 
         function fillSelect(id, list, defText) {
@@ -532,14 +589,10 @@
 
         function applyFilters() {
             const sVal = deaccent(val('filter-search').trim());
-            const yVal = val('filter-year');
-            const mVal = val('filter-month');
-            const stVal = val('filter-status');
-            const aVal = val('filter-area');
-            const cVal = val('filter-category');
-            const pVal = val('filter-priority');
+            const yVal = val('filter-year'), mVal = val('filter-month'), stVal = val('filter-status');
+            const tyVal = val('filter-type'), aVal = val('filter-area'), cVal = val('filter-category'), pVal = val('filter-priority');
 
-            const hasFilters = sVal !== '' || [yVal, mVal, stVal, aVal, cVal, pVal].some(function (v) { return v !== 'ALL'; });
+            const hasFilters = sVal !== '' || [yVal, mVal, stVal, tyVal, aVal, cVal, pVal].some(function (v) { return v !== 'ALL'; });
             document.getElementById('btn-reset').className = hasFilters
                 ? 'flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm'
                 : 'hidden';
@@ -548,11 +601,14 @@
                 if (sVal && t.blob.indexOf(sVal) === -1) return false;
                 if (yVal !== 'ALL' && (!t.date || String(t.date.getFullYear()) !== yVal)) return false;
                 if (mVal !== 'ALL' && (!t.date || String(t.date.getMonth() + 1) !== mVal)) return false;
-                if (stVal === 'ABIERTOS') { if (t.status === 'Resuelto') return false; }
+                if (stVal === 'ABIERTOS') { if (isClosed(t)) return false; }
+                else if (stVal === 'CERRADOS') { if (!isClosed(t)) return false; }
                 else if (stVal !== 'ALL' && t.status !== stVal) return false;
+                if (tyVal !== 'ALL' && t.type !== tyVal) return false;
                 if (aVal !== 'ALL' && t.area !== aVal) return false;
                 if (cVal !== 'ALL' && t.cat !== cVal) return false;
                 if (pVal === 'HIGH') { if (t.prio !== 'Crítica' && t.prio !== 'Alta') return false; }
+                else if (pVal === 'SIN') { if (t.prio) return false; }
                 else if (pVal !== 'ALL' && t.prio !== pVal) return false;
                 return true;
             });
@@ -567,7 +623,7 @@
 
         function resetAllFilters() {
             document.getElementById('filter-search').value = '';
-            ['filter-year', 'filter-month', 'filter-status', 'filter-area', 'filter-category', 'filter-priority']
+            ['filter-year', 'filter-month', 'filter-status', 'filter-type', 'filter-area', 'filter-category', 'filter-priority']
                 .forEach(function (id) { document.getElementById(id).value = 'ALL'; });
             applyFilters();
         }
@@ -587,27 +643,45 @@
         /* ---------- KPIs ---------- */
 
         function renderKPIs(data) {
-            const resolved = data.filter(function (t) { return t.status === 'Resuelto'; });
-            const open = data.filter(function (t) { return t.status !== 'Resuelto'; });
+            const closed = data.filter(isClosed);
+            const open = data.filter(function (t) { return !isClosed(t); });
 
             document.getElementById('kpi-total').textContent = data.length;
             document.getElementById('kpi-high').textContent = data.filter(function (t) { return t.prio === 'Crítica' || t.prio === 'Alta'; }).length;
             document.getElementById('kpi-pending').textContent = open.length;
-            document.getElementById('kpi-resolved').textContent = resolved.length;
+            document.getElementById('kpi-resolved').textContent = closed.length;
 
-            // Ticket abierto más antiguo
-            const oldest = open.filter(function (t) { return t.date; })
-                .sort(function (a, b) { return a.date - b.date; })[0];
+            const times = closed.map(function (t) { return t.resolutionDays; }).filter(function (n) { return n !== null; });
+            if (times.length) {
+                const avg = times.reduce(function (a, b) { return a + b; }, 0) / times.length;
+                document.getElementById('kpi-mttr').textContent = avg.toFixed(1) + ' días';
+                document.getElementById('kpi-mttr-detail').textContent = times.length + ' de ' + closed.length + ' cerrados tienen fecha de cierre';
+                document.getElementById('kpi-median').textContent = median(times).toFixed(1) + ' días';
+            } else {
+                document.getElementById('kpi-mttr').textContent = '—';
+                document.getElementById('kpi-mttr-detail').textContent = 'Sin fechas de cierre utilizables';
+                document.getElementById('kpi-median').textContent = '—';
+            }
+
+            const oldest = open.filter(function (t) { return t.date; }).sort(function (a, b) { return a.date - b.date; })[0];
             if (oldest) {
                 const days = daysBetween(oldest.date, new Date());
                 document.getElementById('kpi-oldest').textContent = days + (days === 1 ? ' día' : ' días');
-                document.getElementById('kpi-oldest-detail').textContent = oldest.area + ' · ' + fmtDate(oldest.date);
+                document.getElementById('kpi-oldest-detail').textContent = (oldest.ticket ? oldest.ticket + ' · ' : '') + oldest.area;
             } else {
                 document.getElementById('kpi-oldest').textContent = '—';
                 document.getElementById('kpi-oldest-detail').textContent = 'Nada abierto en esta vista';
             }
 
-   
+            if (data.length) {
+                document.getElementById('kpi-rate').textContent = Math.round(closed.length / data.length * 100) + ' %';
+                document.getElementById('kpi-rate-detail').textContent = closed.length + ' de ' + data.length + ' tickets';
+            } else {
+                document.getElementById('kpi-rate').textContent = '—';
+                document.getElementById('kpi-rate-detail').textContent = 'Sin tickets en vista';
+            }
+        }
+
         /* ---------- gráficos ---------- */
 
         function countBy(data, key) {
@@ -619,7 +693,6 @@
         function renderCharts(data) {
             const areas = countBy(data, 'area');
             const cats = countBy(data, 'cat');
-            const areaColors = areas.map(function (_, i) { return PALETTE[i % PALETTE.length]; });
 
             if (!areaChart) {
                 areaChart = new Chart(document.getElementById('areaChart').getContext('2d'), {
@@ -628,18 +701,15 @@
                     options: {
                         responsive: true, maintainAspectRatio: false, cutout: '70%',
                         plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10, weight: '600' } } } },
-                        onClick: function (evt, el) {
-                            if (el.length) {
-                                document.getElementById('filter-area').value = areaChart.data.labels[el[0].index];
-                                applyFilters();
-                            }
+                        onClick: function (e, el) {
+                            if (el.length) { document.getElementById('filter-area').value = areaChart.data.labels[el[0].index]; applyFilters(); }
                         }
                     }
                 });
             }
             areaChart.data.labels = areas.map(function (e) { return e[0]; });
             areaChart.data.datasets[0].data = areas.map(function (e) { return e[1]; });
-            areaChart.data.datasets[0].backgroundColor = areaColors;
+            areaChart.data.datasets[0].backgroundColor = areas.map(function (_, i) { return PALETTE[i % PALETTE.length]; });
             areaChart.update();
 
             if (!categoryChart) {
@@ -649,15 +719,9 @@
                     options: {
                         responsive: true, maintainAspectRatio: false,
                         plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f5f9' } },
-                            x: { grid: { display: false } }
-                        },
-                        onClick: function (evt, el) {
-                            if (el.length) {
-                                document.getElementById('filter-category').value = categoryChart.data.labels[el[0].index];
-                                applyFilters();
-                            }
+                        scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } },
+                        onClick: function (e, el) {
+                            if (el.length) { document.getElementById('filter-category').value = categoryChart.data.labels[el[0].index]; applyFilters(); }
                         }
                     }
                 });
@@ -665,6 +729,46 @@
             categoryChart.data.labels = cats.map(function (e) { return e[0]; });
             categoryChart.data.datasets[0].data = cats.map(function (e) { return e[1]; });
             categoryChart.update();
+
+            renderMonthChart(data);
+        }
+
+        function renderMonthChart(data) {
+            const buckets = {};
+            const key = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+            data.forEach(function (t) {
+                if (t.date) {
+                    buckets[key(t.date)] = buckets[key(t.date)] || { in: 0, out: 0 };
+                    buckets[key(t.date)].in++;
+                }
+                if (t.closedDate) {
+                    buckets[key(t.closedDate)] = buckets[key(t.closedDate)] || { in: 0, out: 0 };
+                    buckets[key(t.closedDate)].out++;
+                }
+            });
+            const labels = Object.keys(buckets).sort();
+
+            if (!monthChart) {
+                monthChart = new Chart(document.getElementById('monthChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            { label: 'Abiertos', data: [], backgroundColor: '#f59e0b', borderRadius: 5, maxBarThickness: 28 },
+                            { label: 'Cerrados', data: [], backgroundColor: '#10b981', borderRadius: 5, maxBarThickness: 28 }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10, weight: '600' } } } },
+                        scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                    }
+                });
+            }
+            monthChart.data.labels = labels;
+            monthChart.data.datasets[0].data = labels.map(function (k) { return buckets[k].in; });
+            monthChart.data.datasets[1].data = labels.map(function (k) { return buckets[k].out; });
+            monthChart.update();
         }
 
         /* ---------- tabla ---------- */
@@ -674,13 +778,34 @@
             if (prio === 'Alta') return '<span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-200">Alta</span>';
             if (prio === 'Media') return '<span class="bg-sky-100 text-sky-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-sky-200">Media</span>';
             if (prio === 'Baja') return '<span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-bold border border-slate-200">Baja</span>';
-            return '<span class="bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full text-xs font-bold border border-slate-200">Sin definir</span>';
+            return '<span class="bg-white text-slate-400 px-2.5 py-0.5 rounded-full text-xs font-bold border border-dashed border-slate-300">Sin definir</span>';
         }
 
-        function statusBadge(status) {
-            if (status === 'Resuelto') return '<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Resuelto</span>';
-            if (status === 'En proceso') return '<span class="bg-sky-100 text-sky-800 border border-sky-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>En proceso</span>';
-            return '<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pendiente</span>';
+        function statusBadge(t) {
+            const map = {
+                'Resuelto':   ['bg-emerald-100 text-emerald-800 border-emerald-200', 'bg-emerald-500'],
+                'Cerrado':    ['bg-slate-200 text-slate-700 border-slate-300', 'bg-slate-500'],
+                'En proceso': ['bg-sky-100 text-sky-800 border-sky-200', 'bg-sky-500'],
+                'En espera':  ['bg-violet-100 text-violet-800 border-violet-200', 'bg-violet-500'],
+                'Nuevo':      ['bg-amber-100 text-amber-800 border-amber-200', 'bg-amber-500']
+            };
+            const s = map[t.status] || map['Nuevo'];
+            const label = t.rawStatus || t.status;
+            return '<span title="' + escapeHtml(label) + '" class="' + s[0] + ' border px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit mx-auto whitespace-nowrap">' +
+                   '<span class="w-1.5 h-1.5 rounded-full ' + s[1] + '"></span>' + escapeHtml(t.status) + '</span>';
+        }
+
+        function daysCell(t) {
+            if (t.resolutionDays !== null) {
+                const color = t.resolutionDays > 14 ? 'text-rose-600' : 'text-slate-500';
+                return '<span class="' + color + ' font-semibold">' + t.resolutionDays + '</span>';
+            }
+            if (!isClosed(t) && t.date) {
+                const age = daysBetween(t.date, new Date());
+                const color = age > 14 ? 'text-rose-600' : 'text-amber-600';
+                return '<span class="' + color + ' font-semibold" title="Días abierto">' + age + '↑</span>';
+            }
+            return '<span class="text-slate-300">—</span>';
         }
 
         function renderTable() {
@@ -689,7 +814,7 @@
             if (currentPage > totalPages) currentPage = totalPages;
 
             if (!filteredData.length) {
-                body.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-slate-400 bg-slate-50/50 font-medium">Ningún ticket coincide con estos filtros. Probá quitar alguno.</td></tr>';
+                body.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-slate-400 bg-slate-50/50 font-medium">Ningún ticket coincide con estos filtros. Probá quitar alguno.</td></tr>';
                 document.getElementById('page-info').textContent = '0 resultados';
                 document.getElementById('btn-prev').disabled = true;
                 document.getElementById('btn-next').disabled = true;
@@ -700,14 +825,20 @@
             const page = filteredData.slice(start, start + PAGE_SIZE);
 
             body.innerHTML = page.map(function (t) {
+                const clip = t.attach
+                    ? ' <a href="' + escapeHtml(t.attach) + '" target="_blank" rel="noopener noreferrer" class="text-indigo-600 font-bold" title="Ver adjunto">↗</a>'
+                    : '';
                 return '<tr class="hover:bg-slate-50/80 transition duration-150">' +
-                    '<td class="p-3 text-slate-500 font-mono text-xs">' + escapeHtml(fmtDate(t.date)) + '</td>' +
+                    '<td class="p-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">' + escapeHtml(t.ticket || '—') + '</td>' +
+                    '<td class="p-3 text-slate-500 font-mono text-xs whitespace-nowrap">' + escapeHtml(fmtDate(t.date)) + '</td>' +
                     '<td class="p-3 font-semibold text-slate-800">' + escapeHtml(t.user) + '</td>' +
                     '<td class="p-3 font-bold text-slate-700">' + escapeHtml(t.area) + '</td>' +
+                    '<td class="p-3 text-slate-500 text-xs">' + escapeHtml(t.type) + '</td>' +
                     '<td class="p-3 text-slate-600 font-medium">' + escapeHtml(t.cat) + '</td>' +
-                    '<td class="p-3 text-center">' + statusBadge(t.status) + '</td>' +
+                    '<td class="p-3 text-center">' + statusBadge(t) + '</td>' +
                     '<td class="p-3 flex justify-center">' + priorityBadge(t.prio) + '</td>' +
-                    '<td class="p-3 text-slate-600 max-w-sm truncate" title="' + escapeHtml(t.desc) + '">' + escapeHtml(t.desc || '-') + '</td>' +
+                    '<td class="p-3 text-center font-mono text-xs">' + daysCell(t) + '</td>' +
+                    '<td class="p-3 text-slate-600 max-w-sm truncate" title="' + escapeHtml(t.desc) + '">' + escapeHtml(t.desc || '-') + clip + '</td>' +
                     '</tr>';
             }).join('');
 
@@ -723,15 +854,52 @@
             renderTable();
         }
 
+        /* ---------- higiene de datos ---------- */
+
+        function renderHygiene() {
+            const counts = {};
+            allData.forEach(function (t) {
+                if (t.ticket) counts[t.ticket] = (counts[t.ticket] || 0) + 1;
+            });
+            const dupes = Object.keys(counts).filter(function (k) { return counts[k] > 1; }).sort();
+
+            const closedNoDate = allData.filter(function (t) { return isClosed(t) && !t.closedDate; });
+            const noPriority = allData.filter(function (t) { return !t.prio; });
+            const noStatus = allData.filter(function (t) { return !t.rawStatus; });
+            const noTicket = allData.filter(function (t) { return !t.ticket; });
+            const badDates = allData.filter(function (t) { return t.date && t.closedDate && t.closedDate < t.date; });
+
+            const items = [
+                { label: 'N° de ticket duplicados', n: dupes.length, detail: dupes.join(', ') },
+                { label: 'Cerrados sin fecha de cierre', n: closedNoDate.length, detail: closedNoDate.map(function (t) { return t.ticket; }).join(', ') },
+                { label: 'Sin prioridad asignada', n: noPriority.length, detail: noPriority.map(function (t) { return t.ticket; }).join(', ') },
+                { label: 'Sin estado cargado', n: noStatus.length, detail: noStatus.map(function (t) { return t.ticket; }).join(', ') },
+                { label: 'Sin N° de ticket', n: noTicket.length, detail: '' },
+                { label: 'Cierre anterior a la apertura', n: badDates.length, detail: badDates.map(function (t) { return t.ticket; }).join(', ') }
+            ];
+
+            document.getElementById('hyg-total').textContent = allData.length;
+            document.getElementById('hygiene-list').innerHTML = items.map(function (i) {
+                const ok = i.n === 0;
+                return '<div class="' + (ok ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200') + ' border p-3 rounded-xl">' +
+                    '<div class="flex items-center justify-between gap-2">' +
+                        '<span class="font-semibold ' + (ok ? 'text-emerald-900' : 'text-amber-900') + '">' + escapeHtml(i.label) + '</span>' +
+                        '<span class="' + (ok ? 'bg-emerald-600' : 'bg-amber-600') + ' text-white font-bold px-2 py-0.5 rounded text-[11px]">' + i.n + '</span>' +
+                    '</div>' +
+                    (i.detail ? '<p class="text-[11px] text-amber-800 mt-1 font-mono break-words">' + escapeHtml(i.detail) + '</p>' : '') +
+                '</div>';
+            }).join('');
+        }
+
         /* ---------- exportar ---------- */
 
         function exportCSV() {
             if (!filteredData.length) return;
-            const rows = [['Fecha', 'Usuario', 'Área', 'Categoría', 'Estado', 'Prioridad', 'Descripción']].concat(
-                filteredData.map(function (t) {
-                    return [fmtDate(t.date), t.user, t.area, t.cat, t.status, t.prio, t.desc];
-                })
-            );
+            const header = ['N° Ticket', 'Fecha', 'Usuario', 'Área', 'Tipo', 'Categoría', 'Estado', 'Prioridad', 'Impacto', 'Responsable', 'Fecha cierre', 'Días', 'Descripción'];
+            const rows = [header].concat(filteredData.map(function (t) {
+                return [t.ticket, fmtDate(t.date), t.user, t.area, t.type, t.cat, t.status, t.prio, t.impact, t.owner,
+                        t.closedDate ? fmtDate(t.closedDate) : '', t.resolutionDays === null ? '' : t.resolutionDays, t.desc];
+            }));
             const csv = rows.map(function (r) {
                 return r.map(function (c) { return '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"'; }).join(',');
             }).join('\r\n');
@@ -756,9 +924,7 @@
 
         window.addEventListener('DOMContentLoaded', function () {
             fetchData();
-            setInterval(function () {
-                if (!document.hidden) fetchData();
-            }, REFRESH_MS);
+            setInterval(function () { if (!document.hidden) fetchData(); }, REFRESH_MS);
         });
     })();
     </script>
