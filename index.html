@@ -169,11 +169,7 @@
                     <p id="kpi-oldest" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
                     <p id="kpi-oldest-detail" class="text-[11px] text-slate-500 font-medium mt-0.5">Sin datos</p>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tiempo medio de resolución</p>
-                    <p id="kpi-mttr" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
-                    <p id="kpi-mttr-detail" class="text-[11px] text-slate-500 font-medium mt-0.5">Requiere columna de fecha de cierre</p>
-                </div>
+             
                 <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow">
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tasa de resolución</p>
                     <p id="kpi-rate" class="text-xl font-extrabold text-slate-900 mt-1">—</p>
@@ -611,30 +607,7 @@
                 document.getElementById('kpi-oldest-detail').textContent = 'Nada abierto en esta vista';
             }
 
-            // Tiempo medio de resolución
-            const withTimes = resolved.filter(function (t) { return t.date && t.resolvedDate && t.resolvedDate >= t.date; });
-            if (withTimes.length) {
-                const avg = withTimes.reduce(function (sum, t) { return sum + (t.resolvedDate - t.date); }, 0) / withTimes.length / 86400000;
-                document.getElementById('kpi-mttr').textContent = avg.toFixed(1) + ' días';
-                document.getElementById('kpi-mttr-detail').textContent = 'Sobre ' + withTimes.length + ' tickets con fecha de cierre';
-            } else {
-                document.getElementById('kpi-mttr').textContent = '—';
-                document.getElementById('kpi-mttr-detail').textContent = COLS.resolved
-                    ? 'Sin fechas de cierre cargadas'
-                    : 'Agregá una columna "Fecha de resolución" a la planilla';
-            }
-
-            // Tasa de resolución
-            if (data.length) {
-                const rate = Math.round(resolved.length / data.length * 100);
-                document.getElementById('kpi-rate').textContent = rate + ' %';
-                document.getElementById('kpi-rate-detail').textContent = resolved.length + ' de ' + data.length + ' tickets';
-            } else {
-                document.getElementById('kpi-rate').textContent = '—';
-                document.getElementById('kpi-rate-detail').textContent = 'Sin tickets en vista';
-            }
-        }
-
+   
         /* ---------- gráficos ---------- */
 
         function countBy(data, key) {
